@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>騎價所｜大型重機透明估價工具 Demo</title>
+  <style>
+    :root {
+      --orange: #f97316;
+      --orange-dark: #ea580c;
+      --orange-soft: #fff7ed;
+      --orange-line: #fed7aa;
+      --gray-900: #1f2937;
+      --gray-800: #273244;
+      --gray-700: #374151;
+      --gray-600: #4b5563;
+      --gray-500: #6b7280;
+      --gray-300: #d1d5db;
+      --gray-200: #e5e7eb;
+      --gray-100: #f3f4f6;
+      --gray-50: #f9fafb;
+      --white: #ffffff;
+      --red: #dc2626;
+      --green: #16a34a;
+      --shadow: 0 16px 40px rgba(31, 41, 55, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(120deg, rgba(255, 247, 237, 0.9), rgba(255, 255, 255, 0.8) 40%),
+        repeating-linear-gradient(105deg, rgba(249, 115, 22, 0.06) 0 2px, transparent 2px 54px);
+      color: var(--gray-900);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(229, 231, 235, 0.9);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: min(1120px, calc(100% - 32px));
+      min-height: 64px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: var(--white);
+      box-shadow: 0 8px 18px rgba(249, 115, 22, 0.26);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .brand-title {
+      overflow: hidden;
+      font-size: 1rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .brand-subtitle {
+      color: var(--gray-500);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .topbar-actions {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .landing {
+      display: grid;
+      gap: 28px;
+      padding: 36px 0 42px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      border: 1px solid var(--orange-line);
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: var(--orange-soft);
+      color: var(--orange-dark);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 18px;
+      align-content: center;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 11em;
+      font-size: clamp(2.35rem, 12vw, 4.7rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .hero-subtitle {
+      max-width: 620px;
+      color: var(--gray-700);
+      font-size: clamp(1.02rem, 4vw, 1.22rem);
+      font-weight: 600;
+    }
+
+    .button-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .btn,
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      border: 0;
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      font-weight: 800;
+      text-align: center;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+    }
+
+    .btn:hover,
+    .link-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: var(--white);
+      box-shadow: 0 12px 24px rgba(249, 115, 22, 0.24);
+    }
+
+    .btn-primary:hover {
+      background: var(--orange-dark);
+    }
+
+    .btn-secondary,
+    .link-btn {
+      border: 1px solid var(--gray-300);
+      background: var(--white);
+      color: var(--gray-900);
+    }
+
+    .btn-secondary:hover,
+    .link-btn:hover {
+      border-color: var(--orange-line);
+      box-shadow: 0 10px 24px rgba(31, 41, 55, 0.08);
+    }
+
+    .btn-ghost {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--gray-600);
+    }
+
+    .btn-ghost:hover {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+
+    .notice {
+      border: 1px solid var(--orange-line);
+      border-left: 5px solid var(--orange);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--orange-soft);
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gray-900);
+      font-size: 1rem;
+    }
+
+    .notice ul {
+      display: grid;
+      gap: 4px;
+      margin: 0;
+      padding-left: 20px;
+      color: var(--gray-700);
+    }
+
+    .hero-preview {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(249, 115, 22, 0.22);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-preview::before {
+      position: absolute;
+      top: 0;
+      right: -20%;
+      width: 80%;
+      height: 130px;
+      background: repeating-linear-gradient(110deg, rgba(249, 115, 22, 0.12) 0 10px, transparent 10px 24px);
+      content: "";
+      transform: skewX(-14deg);
+    }
+
+    .preview-content {
+      position: relative;
+      display: grid;
+      gap: 18px;
+      padding: 20px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .meter-card {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: linear-gradient(180deg, #ffffff, #fffaf6);
+    }
+
+    .meter-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--gray-600);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .meter-value {
+      color: var(--gray-900);
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .meter-track {
+      overflow: hidden;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--gray-200);
+    }
+
+    .meter-fill {
+      width: 68%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--orange), var(--orange-dark));
+    }
+
+    .mini-price-preview {
+      display: grid;
+      gap: 8px;
+    }
+
+    .mini-price-row {
+      display: grid;
+      grid-template-columns: 96px 1fr 64px;
+      align-items: center;
+      gap: 10px;
+      color: var(--gray-600);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .mini-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: var(--gray-200);
+    }
+
+    .mini-bar span {
+      display: block;
+      width: var(--width);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--orange);
+    }
+
+    .trust-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .trust-item {
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--gray-50);
+      color: var(--gray-700);
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .workflow {
+      display: none;
+      padding: 20px 0 48px;
+    }
+
+    .workflow.active {
+      display: block;
+    }
+
+    .form-shell {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .workflow-header {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .workflow-title-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .workflow-title {
+      display: grid;
+      gap: 4px;
+    }
+
+    .workflow-title h2 {
+      font-size: clamp(1.55rem, 6vw, 2.25rem);
+      line-height: 1.18;
+    }
+
+    .workflow-title p {
+      color: var(--gray-600);
+      font-weight: 600;
+    }
+
+    .form-demo-warning {
+      border: 1px solid var(--orange-line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      background: var(--orange-soft);
+      color: var(--gray-700);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .progress-wrap {
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: thin;
+    }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(126px, 1fr));
+      gap: 8px;
+      min-width: 680px;
+    }
+
+    .progress-step {
+      position: relative;
+      display: grid;
+      gap: 6px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 10px;
+      background: var(--white);
+      color: var(--gray-500);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .progress-step::before {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: var(--gray-100);
+      color: var(--gray-600);
+      content: attr(data-step);
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .progress-step.active {
+      border-color: var(--orange);
+      background: var(--orange-soft);
+      color: var(--orange-dark);
+    }
+
+    .progress-step.active::before {
+      background: var(--orange);
+      color: var(--white);
+    }
+
+    .progress-step.done {
+      border-color: rgba(22, 163, 74, 0.4);
+      color: var(--green);
+    }
+
+    .progress-step.done::before {
+      background: var(--green);
+      color: var(--white);
+      content: "✓";
+    }
+
+    .step-panel {
+      display: none;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .step-panel.active {
+      display: block;
+    }
+
+    .panel-inner {
+      display: grid;
+      gap: 22px;
+      padding: 18px;
+    }
+
+    .section-heading {
+      display: grid;
+      gap: 6px;
+      border-bottom: 1px solid var(--gray-200);
+      padding-bottom: 14px;
+    }
+
+    .section-heading h3 {
+      font-size: 1.25rem;
+    }
+
+    .section-heading p {
+      color: var(--gray-600);
+      font-size: 0.94rem;
+      font-weight: 600;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label,
+    .group-label {
+      color: var(--gray-900);
+      font-weight: 900;
+    }
+
+    .field-hint {
+      color: var(--gray-500);
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius);
+      padding: 11px 12px;
+      background: var(--white);
+      color: var(--gray-900);
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.16);
+    }
+
+    .choice-grid,
+    .condition-grid,
+    .mod-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .choice-card {
+      position: relative;
+      display: flex;
+      min-height: 48px;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      font-weight: 800;
+      transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .choice-card:hover {
+      border-color: var(--orange-line);
+      background: var(--white);
+    }
+
+    .choice-card input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--orange);
+      flex: 0 0 auto;
+    }
+
+    .choice-card:has(input:checked) {
+      border-color: var(--orange);
+      background: var(--orange-soft);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.11);
+    }
+
+    .condition-group {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: var(--white);
+    }
+
+    .condition-options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .risk-maintenance {
+      display: grid;
+      gap: 18px;
+    }
+
+    .check-section {
+      display: grid;
+      gap: 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: var(--white);
+    }
+
+    .check-section h4 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .mod-card {
+      display: grid;
+      gap: 8px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--white);
+      transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .mod-card:hover {
+      border-color: var(--orange-line);
+    }
+
+    .mod-card:has(input:checked) {
+      border-color: var(--orange);
+      background: var(--orange-soft);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.11);
+    }
+
+    .mod-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gray-900);
+      font-weight: 900;
+    }
+
+    .mod-main input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--orange);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding-left: 28px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: var(--gray-100);
+      color: var(--gray-700);
+      font-size: 0.76rem;
+      font-weight: 900;
+    }
+
+    .tag.plus {
+      background: #ecfdf5;
+      color: #047857;
+    }
+
+    .tag.neutral {
+      background: var(--gray-100);
+      color: var(--gray-600);
+    }
+
+    .tag.niche {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .tag.risk {
+      background: #fef2f2;
+      color: var(--red);
+    }
+
+    .field-error {
+      display: none;
+      border: 1px solid rgba(220, 38, 38, 0.24);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      background: #fef2f2;
+      color: var(--red);
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .field-error.active {
+      display: block;
+    }
+
+    .step-actions {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 10px;
+      border-top: 1px solid var(--gray-200);
+      padding-top: 18px;
+    }
+
+    .action-left,
+    .action-right {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .result-intro {
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-warning {
+      border: 1px solid rgba(220, 38, 38, 0.24);
+      border-left: 5px solid var(--red);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #fef2f2;
+      color: var(--red);
+      font-weight: 900;
+    }
+
+    .vehicle-summary {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: var(--gray-50);
+    }
+
+    .summary-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px dashed var(--gray-300);
+      padding-bottom: 8px;
+      color: var(--gray-600);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .summary-item:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .summary-item span:last-child {
+      color: var(--gray-900);
+      text-align: right;
+    }
+
+    .price-band {
+      display: grid;
+      gap: 10px;
+    }
+
+    .price-card {
+      display: grid;
+      gap: 8px;
+      border: 1px solid var(--gray-200);
+      border-left: 6px solid var(--orange);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: var(--white);
+    }
+
+    .price-card:nth-child(1) {
+      border-left-color: #fb923c;
+    }
+
+    .price-card:nth-child(2) {
+      border-left-color: #f97316;
+    }
+
+    .price-card:nth-child(3) {
+      border-left-color: #ea580c;
+      background: var(--orange-soft);
+    }
+
+    .price-card:nth-child(4) {
+      border-left-color: #c2410c;
+    }
+
+    .price-card:nth-child(5) {
+      border-left-color: #9a3412;
+    }
+
+    .price-label {
+      color: var(--gray-600);
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+
+    .price-value {
+      color: var(--gray-900);
+      font-size: 1.55rem;
+      font-weight: 950;
+      line-height: 1.1;
+    }
+
+    .price-meter {
+      height: 10px;
+      border-radius: 999px;
+      background: var(--gray-200);
+    }
+
+    .price-meter span {
+      display: block;
+      width: var(--width);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--orange), var(--orange-dark));
+    }
+
+    .result-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .insight-card {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--white);
+    }
+
+    .insight-card h4 {
+      margin: 0;
+      font-size: 1.08rem;
+    }
+
+    .insight-card ul {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding-left: 20px;
+      color: var(--gray-700);
+      font-weight: 650;
+    }
+
+    .confidence {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border: 1px solid var(--orange-line);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--orange-soft);
+    }
+
+    .confidence strong {
+      color: var(--orange-dark);
+      font-size: 1.15rem;
+    }
+
+    .confidence-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 54px;
+      min-height: 42px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: var(--white);
+      font-size: 1.2rem;
+      font-weight: 950;
+    }
+
+    .report-box {
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius);
+      padding: 16px;
+      background:
+        linear-gradient(90deg, rgba(249, 115, 22, 0.08), transparent 32%),
+        var(--gray-50);
+      color: var(--gray-800);
+      font-weight: 750;
+    }
+
+    .footer-note {
+      border-top: 1px solid var(--gray-200);
+      padding: 24px 0 34px;
+      color: var(--gray-500);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    @media (min-width: 560px) {
+      .button-row,
+      .step-actions,
+      .action-left,
+      .action-right {
+        flex-direction: row;
+      }
+
+      .step-actions {
+        justify-content: space-between;
+      }
+
+      .form-grid,
+      .choice-grid,
+      .condition-grid,
+      .mod-grid,
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .field.full,
+      .section-heading,
+      .field-error,
+      .check-section,
+      .result-intro,
+      .confidence,
+      .report-box {
+        grid-column: 1 / -1;
+      }
+
+      .condition-options {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .summary-grid .summary-item {
+        border-bottom: 0;
+        border-radius: var(--radius);
+        padding: 10px;
+        background: var(--white);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .topbar-actions {
+        display: flex;
+      }
+
+      .landing {
+        grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.96fr);
+        align-items: center;
+        min-height: calc(100vh - 64px);
+        padding: 42px 0;
+      }
+
+      .preview-content {
+        padding: 26px;
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .meter-card:first-child {
+        grid-column: 1 / -1;
+      }
+
+      .workflow-title-row {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .panel-inner {
+        padding: 24px;
+      }
+
+      .risk-maintenance {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .price-band {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        align-items: stretch;
+      }
+
+      .price-card {
+        align-content: space-between;
+        min-height: 172px;
+        border-left: 1px solid var(--gray-200);
+        border-top: 6px solid var(--orange);
+      }
+
+      .price-value {
+        font-size: 1.42rem;
+      }
+
+      .result-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .result-grid .insight-card:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .condition-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .mod-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#landing" aria-label="返回首頁">
+          <span class="brand-mark">騎</span>
+          <span class="brand-text">
+            <span class="brand-title">騎價所</span>
+            <span class="brand-subtitle">大型重機透明估價工具 Demo</span>
+          </span>
+        </a>
+        <nav class="topbar-actions" aria-label="主要操作">
+          <a class="link-btn" href="https://forms.gle/REPLACE_WITH_YOUR_GOOGLE_FORM_LINK" target="_blank" rel="noopener" data-survey-link>前往問卷</a>
+          <button class="btn btn-primary" type="button" data-start-demo>開始體驗</button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="container landing" id="landing" data-landing>
+        <div class="hero-copy">
+          <span class="eyebrow">250cc 以上大型重機｜概念原型</span>
+          <h1>你的大型重機現在值多少？</h1>
+          <p class="hero-subtitle">輸入車款、年份、里程、車況與改裝品，體驗未來透明估價工具的操作流程。</p>
+
+          <div class="notice" aria-label="Demo 重要說明">
+            <strong>Demo 重要說明</strong>
+            <ul>
+              <li>本頁為概念體驗版</li>
+              <li>不會儲存任何資料</li>
+              <li>不會產生真實估價</li>
+              <li>價格為示範假資料</li>
+              <li>不可作為買賣依據</li>
+            </ul>
+          </div>
+
+          <div class="button-row">
+            <button class="btn btn-primary" type="button" data-start-demo>開始體驗 Demo</button>
+            <a class="link-btn" href="https://forms.gle/REPLACE_WITH_YOUR_GOOGLE_FORM_LINK" target="_blank" rel="noopener" data-survey-link>直接前往問卷</a>
+          </div>
+        </div>
+
+        <aside class="hero-preview" aria-label="估價結果預覽">
+          <div class="preview-content">
+            <div class="dashboard">
+              <div class="meter-card">
+                <div class="meter-top">
+                  <span>Demo 合理成交價</span>
+                  <span>示範假資料</span>
+                </div>
+                <div class="meter-value">22–25 萬</div>
+                <div class="meter-track" aria-hidden="true"><span class="meter-fill"></span></div>
+              </div>
+              <div class="meter-card">
+                <div class="meter-top">
+                  <span>估價信心</span>
+                  <span>中</span>
+                </div>
+                <div class="meter-track" aria-hidden="true"><span class="meter-fill" style="width: 58%"></span></div>
+              </div>
+              <div class="meter-card">
+                <div class="meter-top">
+                  <span>資料流程</span>
+                  <span>5 步驟</span>
+                </div>
+                <div class="meter-track" aria-hidden="true"><span class="meter-fill" style="width: 82%"></span></div>
+              </div>
+            </div>
+
+            <div class="mini-price-preview" aria-hidden="true">
+              <div class="mini-price-row">
+                <span>車商收購</span>
+                <span class="mini-bar"><span style="--width: 52%"></span></span>
+                <span>18–20</span>
+              </div>
+              <div class="mini-price-row">
+                <span>合理成交</span>
+                <span class="mini-bar"><span style="--width: 75%"></span></span>
+                <span>22–25</span>
+              </div>
+              <div class="mini-price-row">
+                <span>車商販售</span>
+                <span class="mini-bar"><span style="--width: 92%"></span></span>
+                <span>27–30</span>
+              </div>
+            </div>
+
+            <div class="trust-list">
+              <div class="trust-item">不登入</div>
+              <div class="trust-item">不留電話</div>
+              <div class="trust-item">不存資料</div>
+              <div class="trust-item">不連 API</div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="workflow" id="workflow" data-workflow aria-live="polite">
+        <div class="container form-shell">
+          <div class="workflow-header">
+            <div class="workflow-title-row">
+              <div class="workflow-title">
+                <h2>透明估價流程 Demo</h2>
+                <p>請依序填寫模擬資料，最後會看到固定示範結果。</p>
+              </div>
+              <button class="btn btn-secondary" type="button" data-restart>重新開始</button>
+            </div>
+            <div class="form-demo-warning">
+              這是 Demo 概念體驗版，不會儲存任何資料，畫面中的價格為示範用假資料，不代表真實市場行情，也不作為買賣出價或成交依據。
+            </div>
+            <div class="progress-wrap" aria-label="流程進度">
+              <div class="progress" data-progress>
+                <div class="progress-step active" data-step="1">基本資料</div>
+                <div class="progress-step" data-step="2">車況</div>
+                <div class="progress-step" data-step="3">事故與保養</div>
+                <div class="progress-step" data-step="4">改裝品</div>
+                <div class="progress-step" data-step="5">Demo 結果</div>
+              </div>
+            </div>
+          </div>
+
+          <form id="valuationForm" novalidate>
+            <section class="step-panel active" data-panel="0">
+              <div class="panel-inner">
+                <div class="section-heading">
+                  <h3>Step 1：基本資料</h3>
+                  <p>此處僅為流程體驗，請勿填寫車牌、行照、姓名或電話等個資。</p>
+                </div>
+
+                <div class="field-error" data-error></div>
+
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="brand">品牌</label>
+                    <select id="brand" name="brand" required>
+                      <option value="">請選擇品牌</option>
+                      <option>Yamaha</option>
+                      <option>Honda</option>
+                      <option>Kawasaki</option>
+                      <option>Suzuki</option>
+                      <option>BMW</option>
+                      <option>Ducati</option>
+                      <option>Triumph</option>
+                      <option>KTM</option>
+                      <option>Harley-Davidson</option>
+                      <option>SYM</option>
+                      <option>Kymco</option>
+                      <option>其他</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="model">車型</label>
+                    <input id="model" name="model" type="text" placeholder="例如 MT-07、CB650R、Ninja 400" required />
+                  </div>
+
+                  <div class="field">
+                    <label for="year">年份</label>
+                    <select id="year" name="year" required>
+                      <option value="">請選擇年份</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="mileage">目前里程</label>
+                    <input id="mileage" name="mileage" type="number" inputmode="numeric" min="0" step="1" placeholder="單位 km" required />
+                  </div>
+
+                  <div class="field full">
+                    <span class="group-label">排氣量級距</span>
+                    <div class="choice-grid" role="radiogroup" aria-label="排氣量級距">
+                      <label class="choice-card"><input type="radio" name="displacement" value="250–399cc" required />250–399cc</label>
+                      <label class="choice-card"><input type="radio" name="displacement" value="400–599cc" />400–599cc</label>
+                      <label class="choice-card"><input type="radio" name="displacement" value="600–799cc" />600–799cc</label>
+                      <label class="choice-card"><input type="radio" name="displacement" value="800–999cc" />800–999cc</label>
+                      <label class="choice-card"><input type="radio" name="displacement" value="1000cc 以上" />1000cc 以上</label>
+                    </div>
+                  </div>
+
+                  <div class="field full">
+                    <span class="group-label">牌照類型</span>
+                    <div class="choice-grid" role="radiogroup" aria-label="牌照類型">
+                      <label class="choice-card"><input type="radio" name="plate" value="黃牌" required />黃牌</label>
+                      <label class="choice-card"><input type="radio" name="plate" value="紅牌" />紅牌</label>
+                    </div>
+                  </div>
+
+                  <div class="field full">
+                    <span class="group-label">主要用途</span>
+                    <span class="field-hint">可複選</span>
+                    <div class="choice-grid" aria-label="主要用途">
+                      <label class="choice-card"><input type="checkbox" name="usage" value="通勤" />通勤</label>
+                      <label class="choice-card"><input type="checkbox" name="usage" value="假日騎乘" />假日騎乘</label>
+                      <label class="choice-card"><input type="checkbox" name="usage" value="長途旅行" />長途旅行</label>
+                      <label class="choice-card"><input type="checkbox" name="usage" value="跑山" />跑山</label>
+                      <label class="choice-card"><input type="checkbox" name="usage" value="賽道" />賽道</label>
+                      <label class="choice-card"><input type="checkbox" name="usage" value="收藏" />收藏</label>
+                      <label class="choice-card"><input type="checkbox" name="usage" value="其他" />其他</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-actions">
+                  <div class="action-left">
+                    <button class="btn btn-ghost" type="button" data-restart>重新開始</button>
+                  </div>
+                  <div class="action-right">
+                    <button class="btn btn-primary" type="button" data-next>下一步</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="step-panel" data-panel="1">
+              <div class="panel-inner">
+                <div class="section-heading">
+                  <h3>Step 2：車況資料</h3>
+                  <p>請選擇最接近的狀態。正式版未來會搭配更細的檢查項目。</p>
+                </div>
+
+                <div class="field-error" data-error></div>
+
+                <div class="condition-grid" id="conditionGrid"></div>
+
+                <div class="step-actions">
+                  <div class="action-left">
+                    <button class="btn btn-secondary" type="button" data-prev>上一步</button>
+                    <button class="btn btn-ghost" type="button" data-restart>重新開始</button>
+                  </div>
+                  <div class="action-right">
+                    <button class="btn btn-primary" type="button" data-next>下一步</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="step-panel" data-panel="2">
+              <div class="panel-inner">
+                <div class="section-heading">
+                  <h3>Step 3：事故與保養紀錄</h3>
+                  <p>此 Demo 不會判定真實事故車況，選項只用於體驗資料整理流程。</p>
+                </div>
+
+                <div class="field-error" data-error></div>
+
+                <div class="risk-maintenance">
+                  <div class="check-section">
+                    <h4>事故與風險</h4>
+                    <div class="choice-grid">
+                      <label class="choice-card"><input type="checkbox" name="risk" value="原地倒車" />原地倒車</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="低速摔車" />低速摔車</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="高速摔車" />高速摔車</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="車架受損" />車架受損</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="前叉或三角台受損" />前叉或三角台受損</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="龍頭不正" />龍頭不正</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="泡水疑慮" />泡水疑慮</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="調表疑慮" />調表疑慮</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="法規或驗車風險" />法規或驗車風險</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="以上皆無" data-exclusive="risk" />以上皆無</label>
+                    </div>
+                  </div>
+
+                  <div class="check-section">
+                    <h4>保養紀錄</h4>
+                    <div class="choice-grid">
+                      <label class="choice-card"><input type="checkbox" name="maintenance" value="有原廠保養紀錄" />有原廠保養紀錄</label>
+                      <label class="choice-card"><input type="checkbox" name="maintenance" value="有外廠保養紀錄" />有外廠保養紀錄</label>
+                      <label class="choice-card"><input type="checkbox" name="maintenance" value="有完整保養單據" />有完整保養單據</label>
+                      <label class="choice-card"><input type="checkbox" name="maintenance" value="近期完成大保養" />近期完成大保養</label>
+                      <label class="choice-card"><input type="checkbox" name="maintenance" value="近期更換輪胎" />近期更換輪胎</label>
+                      <label class="choice-card"><input type="checkbox" name="maintenance" value="近期更換煞車皮" />近期更換煞車皮</label>
+                      <label class="choice-card"><input type="checkbox" name="maintenance" value="近期更換鏈條齒盤" />近期更換鏈條齒盤</label>
+                      <label class="choice-card"><input type="checkbox" name="maintenance" value="近期更換電瓶" />近期更換電瓶</label>
+                      <label class="choice-card"><input type="checkbox" name="maintenance" value="無明確保養紀錄" />無明確保養紀錄</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-actions">
+                  <div class="action-left">
+                    <button class="btn btn-secondary" type="button" data-prev>上一步</button>
+                    <button class="btn btn-ghost" type="button" data-restart>重新開始</button>
+                  </div>
+                  <div class="action-right">
+                    <button class="btn btn-primary" type="button" data-next>下一步</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="step-panel" data-panel="3">
+              <div class="panel-inner">
+                <div class="section-heading">
+                  <h3>Step 4：改裝品</h3>
+                  <p>請勾選車上主要改裝項目。此頁可不選，直接前往 Demo 結果。</p>
+                </div>
+
+                <div class="mod-grid" id="modGrid"></div>
+
+                <div class="notice">
+                  <strong>改裝品估算提醒</strong>
+                  <p>改裝品不一定會等比例反映在二手價格中。正式版會依品牌、狀態、合法性、是否保留原廠品與買方接受度進行估算。</p>
+                </div>
+
+                <div class="step-actions">
+                  <div class="action-left">
+                    <button class="btn btn-secondary" type="button" data-prev>上一步</button>
+                    <button class="btn btn-ghost" type="button" data-restart>重新開始</button>
+                  </div>
+                  <div class="action-right">
+                    <button class="btn btn-primary" type="button" data-next>查看 Demo 結果</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="step-panel" data-panel="4">
+              <div class="panel-inner">
+                <div class="result-intro">
+                  <div class="section-heading">
+                    <h3>Step 5：Demo 結果頁</h3>
+                    <p>以下結果固定顯示假資料，只用來展示未來產品可能的呈現方式。</p>
+                  </div>
+                  <div class="result-warning">以下為 Demo 示範價格，非真實估價結果。</div>
+                  <div class="form-demo-warning">
+                    這是 Demo 概念體驗版，不會儲存任何資料，畫面中的價格為示範用假資料，不代表真實市場行情，也不作為買賣出價或成交依據。
+                  </div>
+                </div>
+
+                <div class="vehicle-summary">
+                  <h4>本次輸入摘要</h4>
+                  <div class="summary-grid" id="summaryGrid"></div>
+                </div>
+
+                <div class="price-band" aria-label="Demo 示範價格區間">
+                  <article class="price-card">
+                    <div>
+                      <div class="price-label">車商收購參考價</div>
+                      <div class="price-value">18–20 萬</div>
+                    </div>
+                    <div class="price-meter" aria-hidden="true"><span style="--width: 56%"></span></div>
+                  </article>
+                  <article class="price-card">
+                    <div>
+                      <div class="price-label">急售價</div>
+                      <div class="price-value">20–22 萬</div>
+                    </div>
+                    <div class="price-meter" aria-hidden="true"><span style="--width: 64%"></span></div>
+                  </article>
+                  <article class="price-card">
+                    <div>
+                      <div class="price-label">合理成交價</div>
+                      <div class="price-value">22–25 萬</div>
+                    </div>
+                    <div class="price-meter" aria-hidden="true"><span style="--width: 76%"></span></div>
+                  </article>
+                  <article class="price-card">
+                    <div>
+                      <div class="price-label">可等待高價</div>
+                      <div class="price-value">25–27 萬</div>
+                    </div>
+                    <div class="price-meter" aria-hidden="true"><span style="--width: 86%"></span></div>
+                  </article>
+                  <article class="price-card">
+                    <div>
+                      <div class="price-label">車商販售參考價</div>
+                      <div class="price-value">27–30 萬</div>
+                    </div>
+                    <div class="price-meter" aria-hidden="true"><span style="--width: 96%"></span></div>
+                  </article>
+                </div>
+
+                <div class="confidence">
+                  <div>
+                    <strong>估價信心：中</strong>
+                    <p>正式版會依據市場樣本數、車況完整度、保養紀錄與改裝品資料，調整估價信心程度。</p>
+                  </div>
+                  <span class="confidence-badge">中</span>
+                </div>
+
+                <div class="result-grid">
+                  <div class="insight-card">
+                    <h4>示範加分因素</h4>
+                    <ul>
+                      <li>低里程</li>
+                      <li>保養紀錄完整</li>
+                      <li>輪胎近期更換</li>
+                      <li>高品質改裝品具一定市場吸引力</li>
+                    </ul>
+                  </div>
+
+                  <div class="insight-card">
+                    <h4>示範扣分因素</h4>
+                    <ul>
+                      <li>有倒車或摔車紀錄時，買方信任度可能下降</li>
+                      <li>排氣管、短牌架、燈具等改裝需確認法規與驗車風險</li>
+                      <li>若沒有原廠品，部分買方接受度可能降低</li>
+                    </ul>
+                  </div>
+
+                  <div class="insight-card">
+                    <h4>Demo 報告摘要</h4>
+                    <div class="report-box">
+                      【Demo 示範】本車經透明估價流程整理後，合理成交價示範區間為 22–25 萬。主要加分因素包含低里程、保養紀錄完整與近期耗材整理；需注意項目包含倒車紀錄、改裝品合法性與待修項目。此內容僅為 Demo 示範，不代表真實行情。
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-actions">
+                  <div class="action-left">
+                    <button class="btn btn-secondary" type="button" data-restart>重新體驗</button>
+                  </div>
+                  <div class="action-right">
+                    <a class="link-btn" href="https://forms.gle/REPLACE_WITH_YOUR_GOOGLE_FORM_LINK" target="_blank" rel="noopener" data-survey-link>前往問卷填寫意見</a>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-note">
+      騎價所 Demo 僅供問卷體驗與產品概念討論，不代表任何真實市場價格或交易建議。
+    </footer>
+  </div>
+
+  <script>
+    // Demo only: no data is stored, no API request is sent.
+    const surveyUrl = "https://forms.gle/REPLACE_WITH_YOUR_GOOGLE_FORM_LINK";
+    const totalSteps = 5;
+    let currentStep = 0;
+
+    const state = {
+      basic: {},
+      conditions: {},
+      risk: [],
+      maintenance: [],
+      modifications: []
+    };
+
+    const conditionGroups = [
+      { name: "appearance", label: "外觀狀況", options: ["良好", "普通", "有明顯傷痕"] },
+      { name: "engine", label: "引擎狀況", options: ["正常", "有異音", "有待修"] },
+      { name: "suspension", label: "前叉／避震", options: ["正常", "輕微滲油", "需要整理"] },
+      { name: "brake", label: "煞車系統", options: ["正常", "耗材需更換", "需要維修"] },
+      { name: "tire", label: "輪胎狀況", options: ["近期更換", "尚可", "需要更換"] },
+      { name: "chain", label: "鏈條齒盤", options: ["良好", "普通", "需要更換"] },
+      { name: "electric", label: "電系", options: ["正常", "偶發異常", "需要檢修"] },
+      { name: "repair", label: "是否有待修項目", options: ["無", "有，但不嚴重", "有明顯待修"] }
+    ];
+
+    const modifications = [
+      { name: "排氣管", tags: ["可能加分", "法規風險"] },
+      { name: "避震器", tags: ["可能加分"] },
+      { name: "前叉套件", tags: ["可能加分"] },
+      { name: "煞車卡鉗", tags: ["可能加分"] },
+      { name: "總泵", tags: ["可能加分"] },
+      { name: "煞車油管", tags: ["中性"] },
+      { name: "輪框", tags: ["族群限定"] },
+      { name: "快排", tags: ["可能加分"] },
+      { name: "ECU", tags: ["族群限定", "風險"] },
+      { name: "拉桿", tags: ["中性"] },
+      { name: "腳踏後移", tags: ["族群限定"] },
+      { name: "防倒球", tags: ["中性"] },
+      { name: "車箱／箱架", tags: ["依車型加分"] },
+      { name: "行車記錄器", tags: ["小幅加分"] },
+      { name: "車機", tags: ["小幅加分"] },
+      { name: "USB 供電", tags: ["中性"] },
+      { name: "風鏡", tags: ["中性"] },
+      { name: "短牌架", tags: ["法規風險"] },
+      { name: "外觀套件", tags: ["族群限定"] },
+      { name: "燈具", tags: ["法規風險"] }
+    ];
+
+    const panels = Array.from(document.querySelectorAll("[data-panel]"));
+    const progressSteps = Array.from(document.querySelectorAll(".progress-step"));
+    const landing = document.querySelector("[data-landing]");
+    const workflow = document.querySelector("[data-workflow]");
+    const form = document.querySelector("#valuationForm");
+    const yearSelect = document.querySelector("#year");
+    const conditionGrid = document.querySelector("#conditionGrid");
+    const modGrid = document.querySelector("#modGrid");
+    const summaryGrid = document.querySelector("#summaryGrid");
+
+    function buildYearOptions() {
+      for (let year = 2026; year >= 2000; year -= 1) {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+      }
+    }
+
+    function getTagClass(tag) {
+      if (tag.includes("加分")) return "plus";
+      if (tag.includes("風險") || tag === "風險") return "risk";
+      if (tag.includes("限定") || tag.includes("依車型")) return "niche";
+      return "neutral";
+    }
+
+    function buildConditionCards() {
+      conditionGrid.innerHTML = conditionGroups.map((group) => {
+        const options = group.options.map((option) => `
+          <label class="choice-card">
+            <input type="radio" name="${group.name}" value="${option}" required />
+            ${option}
+          </label>
+        `).join("");
+
+        return `
+          <div class="condition-group">
+            <span class="group-label">${group.label}</span>
+            <div class="condition-options" role="radiogroup" aria-label="${group.label}">
+              ${options}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function buildModificationCards() {
+      modGrid.innerHTML = modifications.map((item) => {
+        const tags = item.tags.map((tag) => `<span class="tag ${getTagClass(tag)}">${tag}</span>`).join("");
+        return `
+          <label class="mod-card">
+            <span class="mod-main">
+              <input type="checkbox" name="modifications" value="${item.name}" />
+              ${item.name}
+            </span>
+            <span class="tag-row">${tags}</span>
+          </label>
+        `;
+      }).join("");
+    }
+
+    function showWorkflow() {
+      landing.classList.add("is-hidden");
+      workflow.classList.add("active");
+      currentStep = 0;
+      updateStep();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function updateStep() {
+      panels.forEach((panel, index) => {
+        panel.classList.toggle("active", index === currentStep);
+      });
+
+      progressSteps.forEach((step, index) => {
+        step.classList.toggle("active", index === currentStep);
+        step.classList.toggle("done", index < currentStep);
+      });
+
+      const activePanel = panels[currentStep];
+      const error = activePanel.querySelector("[data-error]");
+      if (error) {
+        error.classList.remove("active");
+        error.textContent = "";
+      }
+    }
+
+    function getCheckedValues(name) {
+      return Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map((input) => input.value);
+    }
+
+    function getRadioValue(name) {
+      const checked = form.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : "";
+    }
+
+    function showError(message) {
+      const activePanel = panels[currentStep];
+      const error = activePanel.querySelector("[data-error]");
+      if (!error) return;
+      error.textContent = message;
+      error.classList.add("active");
+      error.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function validateStep() {
+      if (currentStep === 0) {
+        const brand = form.brand.value.trim();
+        const model = form.model.value.trim();
+        const year = form.year.value;
+        const mileage = form.mileage.value;
+        const displacement = getRadioValue("displacement");
+        const plate = getRadioValue("plate");
+        const usage = getCheckedValues("usage");
+
+        if (!brand || !model || !year || mileage === "" || !displacement || !plate || usage.length === 0) {
+          showError("請完成品牌、車型、年份、里程、排氣量級距、牌照類型與至少一項主要用途。");
+          return false;
+        }
+
+        if (Number(mileage) < 0) {
+          showError("目前里程不可小於 0 km。");
+          return false;
+        }
+
+        state.basic = { brand, model, year, mileage, displacement, plate, usage };
+      }
+
+      if (currentStep === 1) {
+        const missing = conditionGroups.find((group) => !getRadioValue(group.name));
+        if (missing) {
+          showError(`請選擇「${missing.label}」。`);
+          return false;
+        }
+
+        state.conditions = conditionGroups.reduce((acc, group) => {
+          acc[group.label] = getRadioValue(group.name);
+          return acc;
+        }, {});
+      }
+
+      if (currentStep === 2) {
+        const risk = getCheckedValues("risk");
+        const maintenance = getCheckedValues("maintenance");
+        if (risk.length === 0 || maintenance.length === 0) {
+          showError("請至少各選擇一項事故與風險、保養紀錄。若無事故風險，請選「以上皆無」。");
+          return false;
+        }
+
+        state.risk = risk;
+        state.maintenance = maintenance;
+      }
+
+      if (currentStep === 3) {
+        state.modifications = getCheckedValues("modifications");
+        renderSummary();
+      }
+
+      return true;
+    }
+
+    function renderSummary() {
+      const basic = state.basic;
+      const mods = state.modifications.length > 0 ? state.modifications.join("、") : "未勾選";
+      const summary = [
+        ["品牌／車型", `${basic.brand || "未填"} ${basic.model || ""}`.trim()],
+        ["年份", basic.year || "未填"],
+        ["排氣量級距", basic.displacement || "未填"],
+        ["里程", basic.mileage ? `${Number(basic.mileage).toLocaleString("zh-TW")} km` : "未填"],
+        ["牌照類型", basic.plate || "未填"],
+        ["主要用途", basic.usage ? basic.usage.join("、") : "未填"],
+        ["事故與風險", state.risk.length ? state.risk.join("、") : "未填"],
+        ["保養紀錄", state.maintenance.length ? state.maintenance.join("、") : "未填"],
+        ["改裝品", mods]
+      ];
+
+      summaryGrid.innerHTML = summary.map(([label, value]) => `
+        <div class="summary-item">
+          <span>${label}</span>
+          <span>${value}</span>
+        </div>
+      `).join("");
+    }
+
+    function nextStep() {
+      if (!validateStep()) return;
+      if (currentStep < totalSteps - 1) {
+        currentStep += 1;
+        updateStep();
+        workflow.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep -= 1;
+        updateStep();
+        workflow.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function restartDemo() {
+      form.reset();
+      state.basic = {};
+      state.conditions = {};
+      state.risk = [];
+      state.maintenance = [];
+      state.modifications = [];
+      summaryGrid.innerHTML = "";
+      currentStep = 0;
+      updateStep();
+      landing.classList.remove("is-hidden");
+      workflow.classList.remove("active");
+      landing.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function handleExclusiveCheckbox(event) {
+      const input = event.target;
+      if (!(input instanceof HTMLInputElement) || input.type !== "checkbox") return;
+      const exclusiveGroup = input.dataset.exclusive;
+      if (!exclusiveGroup) {
+        const exclusive = form.querySelector(`input[data-exclusive="${input.name}"]`);
+        if (exclusive && input.name === exclusive.name && input.checked) exclusive.checked = false;
+        return;
+      }
+
+      if (input.checked) {
+        form.querySelectorAll(`input[name="${exclusiveGroup}"]`).forEach((checkbox) => {
+          if (checkbox !== input) checkbox.checked = false;
+        });
+      }
+    }
+
+    document.querySelectorAll("[data-start-demo]").forEach((button) => {
+      button.addEventListener("click", showWorkflow);
+    });
+
+    document.querySelectorAll("[data-next]").forEach((button) => {
+      button.addEventListener("click", nextStep);
+    });
+
+    document.querySelectorAll("[data-prev]").forEach((button) => {
+      button.addEventListener("click", prevStep);
+    });
+
+    document.querySelectorAll("[data-restart]").forEach((button) => {
+      button.addEventListener("click", restartDemo);
+    });
+
+    form.addEventListener("change", handleExclusiveCheckbox);
+
+    buildYearOptions();
+    buildConditionCards();
+    buildModificationCards();
+
+    document.querySelectorAll("[data-survey-link]").forEach((link) => {
+      link.setAttribute("href", surveyUrl);
+    });
+  </script>
+</body>
+</html>
