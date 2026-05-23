@@ -1061,7 +1061,7 @@
   <div class="app-shell">
     <header class="topbar">
       <div class="topbar-inner">
-        <a class="brand" href="#landing" aria-label="返回首頁">
+        <a class="brand" href="#landing" aria-label="返回首頁" data-home-link>
           <span class="brand-mark">騎</span>
           <span class="brand-text">
             <span class="brand-title">騎價所</span>
@@ -1596,6 +1596,13 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    function goHome(event) {
+      if (event) event.preventDefault();
+      landing.classList.remove("is-hidden");
+      workflow.classList.remove("active");
+      landing.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
     function updateStep() {
       panels.forEach((panel, index) => {
         panel.classList.toggle("active", index === currentStep);
@@ -1763,6 +1770,8 @@
     document.querySelectorAll("[data-start-demo]").forEach((button) => {
       button.addEventListener("click", showWorkflow);
     });
+
+    document.querySelector("[data-home-link]").addEventListener("click", goHome);
 
     document.querySelectorAll("[data-next]").forEach((button) => {
       button.addEventListener("click", nextStep);
