@@ -790,6 +790,41 @@
       font-weight: 900;
     }
 
+    .photo-upload-card input:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .photo-preview {
+      display: none;
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .photo-preview.active {
+      display: block;
+    }
+
+    .photo-preview img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .photo-preview span {
+      display: block;
+      overflow: hidden;
+      padding: 8px 10px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .photo-count {
       color: var(--text-muted);
       font-size: 0.86rem;
@@ -1726,30 +1761,36 @@
                   <div class="form-demo-warning">
                     照片隱私提醒：此 Demo 不會上傳照片、不會儲存照片，也不會傳送到 GitHub 或任何伺服器。你選取的照片只會暫存在目前瀏覽器頁面中，重新整理或關閉分頁後就會消失。
                   </div>
-                  <div class="photo-upload-grid">
+                  <div class="photo-upload-grid" data-photo-grid>
                     <div class="photo-upload-card">
                       <label for="photoFront">正面全體</label>
                       <input id="photoFront" name="photoFront" type="file" accept="image/*" data-photo-input />
+                      <div class="photo-preview" data-photo-preview></div>
                     </div>
                     <div class="photo-upload-card">
                       <label for="photoRear">車尾全體</label>
                       <input id="photoRear" name="photoRear" type="file" accept="image/*" data-photo-input />
+                      <div class="photo-preview" data-photo-preview></div>
                     </div>
                     <div class="photo-upload-card">
                       <label for="photoLeft">左側全體</label>
                       <input id="photoLeft" name="photoLeft" type="file" accept="image/*" data-photo-input />
+                      <div class="photo-preview" data-photo-preview></div>
                     </div>
                     <div class="photo-upload-card">
                       <label for="photoRight">右側全體</label>
                       <input id="photoRight" name="photoRight" type="file" accept="image/*" data-photo-input />
+                      <div class="photo-preview" data-photo-preview></div>
                     </div>
                     <div class="photo-upload-card">
                       <label for="photoMileage">儀表清楚里程畫面</label>
                       <input id="photoMileage" name="photoMileage" type="file" accept="image/*" data-photo-input />
+                      <div class="photo-preview" data-photo-preview></div>
                     </div>
-                    <div class="photo-upload-card">
-                      <label for="photoMore">更多</label>
-                      <input id="photoMore" name="photoMore" type="file" accept="image/*" multiple data-photo-input />
+                    <div class="photo-upload-card" data-more-photo-card data-more-index="1">
+                      <label for="photoMore1">更多 1</label>
+                      <input id="photoMore1" name="photoMore1" type="file" accept="image/*" data-photo-input data-more-photo-input />
+                      <div class="photo-preview" data-photo-preview></div>
                     </div>
                   </div>
                   <div class="photo-count" data-photo-count>已選 0 / 10 張</div>
@@ -2123,7 +2164,7 @@
     const frontTireYearSelect = document.querySelector("#frontTireYear");
     const rearTireYearSelect = document.querySelector("#rearTireYear");
     const shellDetails = document.querySelector("[data-shell-details]");
-    const photoInputs = Array.from(document.querySelectorAll("[data-photo-input]"));
+    const photoGrid = document.querySelector("[data-photo-grid]");
     const photoSection = document.querySelector("[data-photo-section]");
     const photoCount = document.querySelector("[data-photo-count]");
     const photoError = document.querySelector("[data-photo-error]");
@@ -2131,6 +2172,7 @@
     const modGrid = document.querySelector("#modGrid");
     const summaryGrid = document.querySelector("#summaryGrid");
     const completionCelebrated = {};
+    const photoPreviewURLs = new WeakMap();
 
     function buildYearOptions() {
       for (let year = 2026; year >= 2000; year -= 1) {
@@ -2268,14 +2310,95 @@
       }
     }
 
+    function getPhotoInputs() {
+      return Array.from(document.querySelectorAll("[data-photo-input]"));
+    }
+
+    function getMorePhotoCards() {
+      return Array.from(document.querySelectorAll("[data-more-photo-card]"));
+    }
+
     function getPhotoTotal() {
-      return photoInputs.reduce((total, input) => total + input.files.length, 0);
+      return getPhotoInputs().reduce((total, input) => total + input.files.length, 0);
+    }
+
+    function renderPhotoPreview(input) {
+      const preview = input.closest(".photo-upload-card")?.querySelector("[data-photo-preview]");
+      if (!preview) return;
+
+      const previousURL = photoPreviewURLs.get(input);
+      if (previousURL) URL.revokeObjectURL(previousURL);
+      photoPreviewURLs.delete(input);
+
+      const file = input.files[0];
+      if (!file) {
+        preview.classList.remove("active");
+        preview.innerHTML = "";
+        return;
+      }
+
+      const url = URL.createObjectURL(file);
+      photoPreviewURLs.set(input, url);
+      preview.innerHTML = "";
+      const image = document.createElement("img");
+      image.src = url;
+      image.alt = `${file.name} 預覽`;
+      const caption = document.createElement("span");
+      caption.textContent = file.name;
+      preview.append(image, caption);
+      preview.classList.add("active");
+    }
+
+    function createMorePhotoCard(index) {
+      const card = document.createElement("div");
+      card.className = "photo-upload-card";
+      card.dataset.morePhotoCard = "";
+      card.dataset.moreIndex = String(index);
+      card.innerHTML = `
+        <label for="photoMore${index}">更多 ${index}</label>
+        <input id="photoMore${index}" name="photoMore${index}" type="file" accept="image/*" data-photo-input data-more-photo-input />
+        <div class="photo-preview" data-photo-preview></div>
+      `;
+      return card;
+    }
+
+    function ensureMorePhotoField() {
+      if (!photoGrid) return;
+
+      const total = getPhotoTotal();
+      const moreCards = getMorePhotoCards();
+      const lastMoreCard = moreCards[moreCards.length - 1];
+      const lastMoreInput = lastMoreCard?.querySelector("[data-more-photo-input]");
+
+      if (total >= 10 || !lastMoreInput || lastMoreInput.files.length === 0) return;
+
+      const nextIndex = Number(lastMoreCard.dataset.moreIndex || moreCards.length) + 1;
+      photoGrid.appendChild(createMorePhotoCard(nextIndex));
+    }
+
+    function updatePhotoInputAvailability(total) {
+      getPhotoInputs().forEach((input) => {
+        input.disabled = total >= 10 && input.files.length === 0;
+      });
+    }
+
+    function resetPhotoFields() {
+      getPhotoInputs().forEach(renderPhotoPreview);
+      getMorePhotoCards().forEach((card, index) => {
+        if (index > 0) card.remove();
+      });
+      getPhotoInputs().forEach((input) => {
+        input.disabled = false;
+      });
     }
 
     function updatePhotoStatus() {
+      getPhotoInputs().forEach(renderPhotoPreview);
+      ensureMorePhotoField();
       const total = getPhotoTotal();
       const overLimit = total > 10;
       state.photos = { total };
+      updatePhotoInputAvailability(total);
 
       if (photoCount) {
         photoCount.textContent = `已選 ${total} / 10 張`;
@@ -2654,6 +2777,7 @@
     function restartDemo() {
       clearLoadingTimer();
       form.reset();
+      resetPhotoFields();
       toggleShellDetails();
       state.basic = {};
       state.conditions = {};
