@@ -6,24 +6,37 @@
   <title>騎價所｜大型重機透明估價工具 Demo</title>
   <style>
     :root {
-      --orange: #f97316;
-      --orange-dark: #ea580c;
-      --orange-soft: #fff7ed;
-      --orange-line: #fed7aa;
-      --gray-900: #1f2937;
-      --gray-800: #273244;
-      --gray-700: #374151;
-      --gray-600: #4b5563;
-      --gray-500: #6b7280;
-      --gray-300: #d1d5db;
-      --gray-200: #e5e7eb;
-      --gray-100: #f3f4f6;
-      --gray-50: #f9fafb;
-      --white: #ffffff;
-      --red: #dc2626;
-      --green: #16a34a;
-      --shadow: 0 16px 40px rgba(31, 41, 55, 0.12);
+      --primary: #1E3A5F;
+      --secondary: #0F766E;
+      --accent: #38BDF8;
+      --background: #F8FAFC;
+      --surface: #FFFFFF;
+      --surface-soft: #F1F5F9;
+      --text-main: #1F2937;
+      --text-muted: #64748B;
+      --border: #CBD5E1;
+      --success: #16A34A;
+      --warning: #D97706;
+      --danger: #DC2626;
+      --info: #2563EB;
+      --teal-soft: #ECFDF5;
+      --teal-line: #99F6E4;
+      --blue-soft: #EFF6FF;
+      --shadow: 0 18px 44px rgba(15, 23, 42, 0.1);
       --radius: 8px;
+
+      --gray-900: var(--text-main);
+      --gray-800: #273244;
+      --gray-700: #334155;
+      --gray-600: var(--text-muted);
+      --gray-500: var(--text-muted);
+      --gray-300: var(--border);
+      --gray-200: #E2E8F0;
+      --gray-100: var(--surface-soft);
+      --gray-50: var(--background);
+      --white: var(--surface);
+      --red: var(--danger);
+      --green: var(--success);
     }
 
     * {
@@ -37,9 +50,9 @@
     body {
       margin: 0;
       background:
-        linear-gradient(120deg, rgba(255, 247, 237, 0.9), rgba(255, 255, 255, 0.8) 40%),
-        repeating-linear-gradient(105deg, rgba(249, 115, 22, 0.06) 0 2px, transparent 2px 54px);
-      color: var(--gray-900);
+        linear-gradient(135deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.92) 46%, rgba(236, 253, 245, 0.72)),
+        repeating-linear-gradient(105deg, rgba(30, 58, 95, 0.045) 0 2px, transparent 2px 56px);
+      color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
       line-height: 1.6;
     }
@@ -67,8 +80,8 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      border-bottom: 1px solid rgba(229, 231, 235, 0.9);
-      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid rgba(203, 213, 225, 0.9);
+      background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(14px);
     }
 
@@ -97,9 +110,9 @@
       width: 38px;
       height: 38px;
       border-radius: 8px;
-      background: var(--orange);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: var(--white);
-      box-shadow: 0 8px 18px rgba(249, 115, 22, 0.26);
+      box-shadow: 0 10px 22px rgba(30, 58, 95, 0.18);
     }
 
     .brand-text {
@@ -116,7 +129,7 @@
     }
 
     .brand-subtitle {
-      color: var(--gray-500);
+      color: var(--text-muted);
       font-size: 0.78rem;
       font-weight: 600;
     }
@@ -144,11 +157,11 @@
       align-items: center;
       gap: 8px;
       width: fit-content;
-      border: 1px solid var(--orange-line);
+      border: 1px solid var(--teal-line);
       border-radius: 999px;
       padding: 7px 12px;
-      background: var(--orange-soft);
-      color: var(--orange-dark);
+      background: var(--teal-soft);
+      color: var(--secondary);
       font-size: 0.86rem;
       font-weight: 800;
     }
@@ -168,9 +181,15 @@
 
     h1 {
       max-width: 11em;
+      color: var(--primary);
       font-size: clamp(2.35rem, 12vw, 4.7rem);
       line-height: 1.05;
       letter-spacing: 0;
+    }
+
+    h2,
+    h3 {
+      color: var(--primary);
     }
 
     .hero-subtitle {
@@ -208,13 +227,13 @@
     }
 
     .btn-primary {
-      background: var(--orange);
+      background: var(--secondary);
       color: var(--white);
-      box-shadow: 0 12px 24px rgba(249, 115, 22, 0.24);
+      box-shadow: 0 12px 24px rgba(15, 118, 110, 0.2);
     }
 
     .btn-primary:hover {
-      background: var(--orange-dark);
+      background: #115E59;
     }
 
     .btn-secondary,
@@ -226,7 +245,8 @@
 
     .btn-secondary:hover,
     .link-btn:hover {
-      border-color: var(--orange-line);
+      border-color: var(--teal-line);
+      background: var(--teal-soft);
       box-shadow: 0 10px 24px rgba(31, 41, 55, 0.08);
     }
 
@@ -242,17 +262,17 @@
     }
 
     .notice {
-      border: 1px solid var(--orange-line);
-      border-left: 5px solid var(--orange);
+      border: 1px solid var(--teal-line);
+      border-left: 5px solid var(--secondary);
       border-radius: var(--radius);
       padding: 16px;
-      background: var(--orange-soft);
+      background: var(--teal-soft);
     }
 
     .notice strong {
       display: block;
       margin-bottom: 8px;
-      color: var(--gray-900);
+      color: var(--primary);
       font-size: 1rem;
     }
 
@@ -267,7 +287,7 @@
     .hero-preview {
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(249, 115, 22, 0.22);
+      border: 1px solid rgba(30, 58, 95, 0.14);
       border-radius: var(--radius);
       background: var(--white);
       box-shadow: var(--shadow);
@@ -279,7 +299,7 @@
       right: -20%;
       width: 80%;
       height: 130px;
-      background: repeating-linear-gradient(110deg, rgba(249, 115, 22, 0.12) 0 10px, transparent 10px 24px);
+      background: repeating-linear-gradient(110deg, rgba(56, 189, 248, 0.14) 0 10px, transparent 10px 24px);
       content: "";
       transform: skewX(-14deg);
     }
@@ -303,7 +323,7 @@
       border: 1px solid var(--gray-200);
       border-radius: var(--radius);
       padding: 14px;
-      background: linear-gradient(180deg, #ffffff, #fffaf6);
+      background: linear-gradient(180deg, var(--surface), var(--surface-soft));
     }
 
     .meter-top {
@@ -317,7 +337,7 @@
     }
 
     .meter-value {
-      color: var(--gray-900);
+      color: var(--primary);
       font-size: 1.8rem;
       font-weight: 900;
       line-height: 1;
@@ -334,7 +354,7 @@
       width: 68%;
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, var(--orange), var(--orange-dark));
+      background: linear-gradient(90deg, var(--secondary), var(--accent));
     }
 
     .mini-price-preview {
@@ -363,7 +383,7 @@
       width: var(--width);
       height: 100%;
       border-radius: inherit;
-      background: var(--orange);
+      background: var(--secondary);
     }
 
     .trust-list {
@@ -376,8 +396,8 @@
       border: 1px solid var(--gray-200);
       border-radius: var(--radius);
       padding: 12px;
-      background: var(--gray-50);
-      color: var(--gray-700);
+      background: var(--surface-soft);
+      color: var(--primary);
       font-size: 0.88rem;
       font-weight: 800;
     }
@@ -421,15 +441,15 @@
     }
 
     .workflow-title p {
-      color: var(--gray-600);
+      color: var(--text-muted);
       font-weight: 600;
     }
 
     .form-demo-warning {
-      border: 1px solid var(--orange-line);
+      border: 1px solid var(--teal-line);
       border-radius: var(--radius);
       padding: 12px 14px;
-      background: var(--orange-soft);
+      background: var(--teal-soft);
       color: var(--gray-700);
       font-size: 0.92rem;
       font-weight: 700;
@@ -456,7 +476,7 @@
       border-radius: var(--radius);
       padding: 10px;
       background: var(--white);
-      color: var(--gray-500);
+      color: var(--text-muted);
       font-size: 0.82rem;
       font-weight: 800;
     }
@@ -475,23 +495,23 @@
     }
 
     .progress-step.active {
-      border-color: var(--orange);
-      background: var(--orange-soft);
-      color: var(--orange-dark);
+      border-color: var(--secondary);
+      background: var(--teal-soft);
+      color: var(--secondary);
     }
 
     .progress-step.active::before {
-      background: var(--orange);
+      background: var(--secondary);
       color: var(--white);
     }
 
     .progress-step.done {
-      border-color: rgba(22, 163, 74, 0.4);
-      color: var(--green);
+      border-color: rgba(22, 163, 74, 0.42);
+      color: var(--success);
     }
 
     .progress-step.done::before {
-      background: var(--green);
+      background: var(--success);
       color: var(--white);
       content: "✓";
     }
@@ -500,7 +520,7 @@
       display: none;
       border: 1px solid var(--gray-200);
       border-radius: var(--radius);
-      background: var(--white);
+      background: var(--surface);
       box-shadow: var(--shadow);
     }
 
@@ -526,7 +546,7 @@
     }
 
     .section-heading p {
-      color: var(--gray-600);
+      color: var(--text-muted);
       font-size: 0.94rem;
       font-weight: 600;
     }
@@ -543,12 +563,12 @@
 
     .field label,
     .group-label {
-      color: var(--gray-900);
+      color: var(--primary);
       font-weight: 900;
     }
 
     .field-hint {
-      color: var(--gray-500);
+      color: var(--text-muted);
       font-size: 0.84rem;
       font-weight: 600;
     }
@@ -561,16 +581,16 @@
       border: 1px solid var(--gray-300);
       border-radius: var(--radius);
       padding: 11px 12px;
-      background: var(--white);
-      color: var(--gray-900);
+      background: var(--surface);
+      color: var(--text-main);
       outline: none;
       transition: border-color 0.16s ease, box-shadow 0.16s ease;
     }
 
     input:focus,
     select:focus {
-      border-color: var(--orange);
-      box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.16);
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.14);
     }
 
     .choice-grid,
@@ -589,28 +609,28 @@
       border: 1px solid var(--gray-200);
       border-radius: var(--radius);
       padding: 12px;
-      background: var(--gray-50);
+      background: var(--background);
       color: var(--gray-800);
       font-weight: 800;
       transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
     }
 
     .choice-card:hover {
-      border-color: var(--orange-line);
+      border-color: var(--teal-line);
       background: var(--white);
     }
 
     .choice-card input {
       width: 18px;
       height: 18px;
-      accent-color: var(--orange);
+      accent-color: var(--secondary);
       flex: 0 0 auto;
     }
 
     .choice-card:has(input:checked) {
-      border-color: var(--orange);
-      background: var(--orange-soft);
-      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.11);
+      border-color: var(--secondary);
+      background: var(--teal-soft);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.11);
     }
 
     .condition-group {
@@ -657,13 +677,13 @@
     }
 
     .mod-card:hover {
-      border-color: var(--orange-line);
+      border-color: var(--teal-line);
     }
 
     .mod-card:has(input:checked) {
-      border-color: var(--orange);
-      background: var(--orange-soft);
-      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.11);
+      border-color: var(--secondary);
+      background: var(--teal-soft);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.11);
     }
 
     .mod-main {
@@ -677,7 +697,7 @@
     .mod-main input {
       width: 18px;
       height: 18px;
-      accent-color: var(--orange);
+      accent-color: var(--secondary);
     }
 
     .tag-row {
@@ -701,7 +721,7 @@
 
     .tag.plus {
       background: #ecfdf5;
-      color: #047857;
+      color: var(--success);
     }
 
     .tag.neutral {
@@ -711,12 +731,12 @@
 
     .tag.niche {
       background: #eff6ff;
-      color: #1d4ed8;
+      color: var(--info);
     }
 
     .tag.risk {
       background: #fef2f2;
-      color: var(--red);
+      color: var(--danger);
     }
 
     .field-error {
@@ -725,7 +745,7 @@
       border-radius: var(--radius);
       padding: 10px 12px;
       background: #fef2f2;
-      color: var(--red);
+      color: var(--danger);
       font-size: 0.92rem;
       font-weight: 800;
     }
@@ -756,11 +776,11 @@
 
     .result-warning {
       border: 1px solid rgba(220, 38, 38, 0.24);
-      border-left: 5px solid var(--red);
+      border-left: 5px solid var(--danger);
       border-radius: var(--radius);
       padding: 14px;
       background: #fef2f2;
-      color: var(--red);
+      color: var(--danger);
       font-weight: 900;
     }
 
@@ -770,7 +790,7 @@
       border: 1px solid var(--gray-200);
       border-radius: var(--radius);
       padding: 14px;
-      background: var(--gray-50);
+      background: var(--surface-soft);
     }
 
     .summary-grid {
@@ -795,7 +815,7 @@
     }
 
     .summary-item span:last-child {
-      color: var(--gray-900);
+      color: var(--primary);
       text-align: right;
     }
 
@@ -805,47 +825,56 @@
     }
 
     .price-card {
+      --price-color: var(--primary);
       display: grid;
       gap: 8px;
       border: 1px solid var(--gray-200);
-      border-left: 6px solid var(--orange);
+      border-left: 6px solid var(--price-color);
       border-radius: var(--radius);
       padding: 14px;
-      background: var(--white);
+      background: var(--price-bg, var(--white));
     }
 
     .price-card:nth-child(1) {
-      border-left-color: #fb923c;
+      --price-color: #64748B;
+      --price-bg: #F1F5F9;
     }
 
     .price-card:nth-child(2) {
-      border-left-color: #f97316;
+      --price-color: var(--accent);
+      --price-bg: #F0F9FF;
     }
 
     .price-card:nth-child(3) {
-      border-left-color: #ea580c;
-      background: var(--orange-soft);
+      --price-color: var(--secondary);
+      --price-bg: var(--teal-soft);
     }
 
     .price-card:nth-child(4) {
-      border-left-color: #c2410c;
+      --price-color: var(--primary);
+      --price-bg: #EFF6FF;
     }
 
     .price-card:nth-child(5) {
-      border-left-color: #9a3412;
+      --price-color: #334155;
+      --price-bg: #F8FAFC;
     }
 
     .price-label {
-      color: var(--gray-600);
+      color: var(--text-muted);
       font-size: 0.9rem;
       font-weight: 900;
     }
 
     .price-value {
-      color: var(--gray-900);
+      color: var(--primary);
       font-size: 1.55rem;
       font-weight: 950;
       line-height: 1.1;
+    }
+
+    .price-card:nth-child(3) .price-value {
+      color: var(--secondary);
     }
 
     .price-meter {
@@ -859,7 +888,7 @@
       width: var(--width);
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, var(--orange), var(--orange-dark));
+      background: var(--price-color);
     }
 
     .result-grid {
@@ -871,6 +900,7 @@
       display: grid;
       gap: 10px;
       border: 1px solid var(--gray-200);
+      border-top: 4px solid var(--primary);
       border-radius: var(--radius);
       padding: 16px;
       background: var(--white);
@@ -878,6 +908,7 @@
 
     .insight-card h4 {
       margin: 0;
+      color: var(--primary);
       font-size: 1.08rem;
     }
 
@@ -890,19 +921,49 @@
       font-weight: 650;
     }
 
+    .insight-card.positive {
+      border-top-color: var(--success);
+    }
+
+    .insight-card.positive h4 {
+      color: var(--success);
+    }
+
+    .insight-card.positive li::marker {
+      color: var(--success);
+    }
+
+    .insight-card.caution {
+      border-top-color: var(--warning);
+    }
+
+    .insight-card.caution h4 {
+      color: var(--warning);
+    }
+
+    .insight-card .caution-item {
+      color: var(--warning);
+      font-weight: 800;
+    }
+
+    .insight-card .risk-item {
+      color: var(--danger);
+      font-weight: 800;
+    }
+
     .confidence {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      border: 1px solid var(--orange-line);
+      border: 1px solid var(--teal-line);
       border-radius: var(--radius);
       padding: 16px;
-      background: var(--orange-soft);
+      background: var(--teal-soft);
     }
 
     .confidence strong {
-      color: var(--orange-dark);
+      color: var(--primary);
       font-size: 1.15rem;
     }
 
@@ -913,7 +974,7 @@
       min-width: 54px;
       min-height: 42px;
       border-radius: 999px;
-      background: var(--orange);
+      background: var(--secondary);
       color: var(--white);
       font-size: 1.2rem;
       font-weight: 950;
@@ -924,8 +985,8 @@
       border-radius: var(--radius);
       padding: 16px;
       background:
-        linear-gradient(90deg, rgba(249, 115, 22, 0.08), transparent 32%),
-        var(--gray-50);
+        linear-gradient(90deg, rgba(15, 118, 110, 0.09), transparent 34%),
+        var(--surface-soft);
       color: var(--gray-800);
       font-weight: 750;
     }
@@ -1030,7 +1091,7 @@
         align-content: space-between;
         min-height: 172px;
         border-left: 1px solid var(--gray-200);
-        border-top: 6px solid var(--orange);
+        border-top: 6px solid var(--price-color);
       }
 
       .price-value {
@@ -1436,7 +1497,7 @@
                 </div>
 
                 <div class="result-grid">
-                  <div class="insight-card">
+                  <div class="insight-card positive">
                     <h4>示範加分因素</h4>
                     <ul>
                       <li>低里程</li>
@@ -1446,12 +1507,12 @@
                     </ul>
                   </div>
 
-                  <div class="insight-card">
+                  <div class="insight-card caution">
                     <h4>示範扣分因素</h4>
                     <ul>
-                      <li>有倒車或摔車紀錄時，買方信任度可能下降</li>
-                      <li>排氣管、短牌架、燈具等改裝需確認法規與驗車風險</li>
-                      <li>若沒有原廠品，部分買方接受度可能降低</li>
+                      <li class="risk-item">有倒車或摔車紀錄時，買方信任度可能下降</li>
+                      <li class="risk-item">排氣管、短牌架、燈具等改裝需確認法規與驗車風險</li>
+                      <li class="caution-item">若沒有原廠品，部分買方接受度可能降低</li>
                     </ul>
                   </div>
 
