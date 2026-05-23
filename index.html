@@ -2217,6 +2217,44 @@
       control.setAttribute("aria-invalid", "true");
     }
 
+    function getInvalidContainerByName(name) {
+      const controls = Array.from(form.querySelectorAll(`[name="${name}"]`));
+      if (controls.length === 0) return null;
+      return controls[0].closest(".condition-group, .field, .check-section") || controls[0];
+    }
+
+    function clearInvalidByName(name) {
+      const container = getInvalidContainerByName(name);
+      if (container) container.classList.remove("is-invalid");
+
+      form.querySelectorAll(`[name="${name}"]`).forEach((control) => {
+        control.removeAttribute("aria-invalid");
+      });
+    }
+
+    function isFieldComplete(name) {
+      const controls = Array.from(form.querySelectorAll(`[name="${name}"]`));
+      if (controls.length === 0) return true;
+
+      const firstControl = controls[0];
+      if (firstControl.type === "radio") return Boolean(getRadioValue(name));
+      if (firstControl.type === "checkbox") return getCheckedValues(name).length > 0;
+
+      if (name === "mileage") {
+        const mileage = firstControl.value;
+        const numericMileage = Number(mileage);
+        return mileage !== "" && Number.isFinite(numericMileage) && numericMileage >= 0;
+      }
+
+      return firstControl.value.trim() !== "";
+    }
+
+    function clearResolvedInvalid(control) {
+      if (!(control instanceof HTMLElement) || !control.name) return;
+      if (!isFieldComplete(control.name)) return;
+      clearInvalidByName(control.name);
+    }
+
     function focusFirstInvalid() {
       const activePanel = panels[currentStep];
       const firstInvalid = activePanel.querySelector(".is-invalid");
@@ -2477,13 +2515,13 @@
       button.addEventListener("click", restartDemo);
     });
 
-    form.addEventListener("input", () => {
-      clearInvalidHighlights(panels[currentStep]);
+    form.addEventListener("input", (event) => {
+      clearResolvedInvalid(event.target);
       updateCompletionMeters();
     });
     form.addEventListener("change", (event) => {
       handleExclusiveCheckbox(event);
-      clearInvalidHighlights(panels[currentStep]);
+      clearResolvedInvalid(event.target);
       updateCompletionMeters();
     });
 
