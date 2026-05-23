@@ -676,7 +676,8 @@
 
     input[type="text"],
     input[type="number"],
-    select {
+    select,
+    textarea {
       width: 100%;
       min-height: 46px;
       border: 1px solid var(--gray-300);
@@ -688,8 +689,14 @@
       transition: border-color 0.16s ease, box-shadow 0.16s ease;
     }
 
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
     input:focus,
-    select:focus {
+    select:focus,
+    textarea:focus {
       border-color: var(--secondary);
       box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.14);
     }
@@ -1408,13 +1415,14 @@
                   </div>
 
                   <div class="field full">
-                    <span class="group-label">排氣量級距</span>
+                    <span class="group-label">排氣量級距（依機車牌照稅級距）</span>
+                    <span class="field-hint">Demo 以台灣機車使用牌照稅級距分類，方便未來對照稅金與持有成本。</span>
                     <div class="choice-grid" role="radiogroup" aria-label="排氣量級距">
-                      <label class="choice-card"><input type="radio" name="displacement" value="250–399cc" required />250–399cc</label>
-                      <label class="choice-card"><input type="radio" name="displacement" value="400–599cc" />400–599cc</label>
-                      <label class="choice-card"><input type="radio" name="displacement" value="600–799cc" />600–799cc</label>
-                      <label class="choice-card"><input type="radio" name="displacement" value="800–999cc" />800–999cc</label>
-                      <label class="choice-card"><input type="radio" name="displacement" value="1000cc 以上" />1000cc 以上</label>
+                      <label class="choice-card"><input type="radio" name="displacement" value="251–500cc（牌照稅級距 1,620 元）" required />251–500cc（牌照稅級距 1,620 元）</label>
+                      <label class="choice-card"><input type="radio" name="displacement" value="501–600cc（牌照稅級距 2,160 元）" />501–600cc（牌照稅級距 2,160 元）</label>
+                      <label class="choice-card"><input type="radio" name="displacement" value="601–1200cc（牌照稅級距 4,320 元）" />601–1200cc（牌照稅級距 4,320 元）</label>
+                      <label class="choice-card"><input type="radio" name="displacement" value="1201–1800cc（牌照稅級距 7,120 元）" />1201–1800cc（牌照稅級距 7,120 元）</label>
+                      <label class="choice-card"><input type="radio" name="displacement" value="1801cc 以上（牌照稅級距 11,230 元）" />1801cc 以上（牌照稅級距 11,230 元）</label>
                     </div>
                   </div>
 
@@ -1467,13 +1475,37 @@
                   <div class="completion-track" role="progressbar" aria-label="車況資料完整度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                     <span data-completion-bar></span>
                   </div>
-                  <div class="completion-hint">外觀、引擎、底盤、煞車、輪胎、鏈條、電系與待修項目都選完後即完成。</div>
+                  <div class="completion-hint">外觀、引擎、前叉、ABS、輪胎、耗材、電系、待修項目與輪胎年份都選完後即完成。</div>
                   <div class="completion-pop" data-completion-pop>100% 完成</div>
                 </div>
 
                 <div class="field-error" data-error></div>
 
                 <div class="condition-grid" id="conditionGrid"></div>
+
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="frontTireYear">前輪製造年份</label>
+                    <select id="frontTireYear" name="frontTireYear" required>
+                      <option value="">請選擇年份或不確定</option>
+                      <option value="不確定">不確定</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="rearTireYear">後輪製造年份</label>
+                    <select id="rearTireYear" name="rearTireYear" required>
+                      <option value="">請選擇年份或不確定</option>
+                      <option value="不確定">不確定</option>
+                    </select>
+                  </div>
+
+                  <div class="field full">
+                    <label for="conditionDescription">車況補充描述</label>
+                    <textarea id="conditionDescription" name="conditionDescription" placeholder="可補充異音、漏油位置、待修項目、耗材狀態、原廠品是否保留、照片中看不到的細節等。"></textarea>
+                    <span class="field-hint">可自由輸入，Demo 不會儲存或送出這段文字。</span>
+                  </div>
+                </div>
 
                 <div class="step-actions">
                   <div class="action-left">
@@ -1502,22 +1534,75 @@
                   <div class="completion-track" role="progressbar" aria-label="事故與保養完整度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                     <span data-completion-bar></span>
                   </div>
-                  <div class="completion-hint">事故與風險、保養紀錄兩個區塊都至少選一項後即完成。</div>
+                  <div class="completion-hint">車輛歷史、任內倒摔、已知歷史、事故程度、事故風險與保養紀錄都填完後即完成。</div>
                   <div class="completion-pop" data-completion-pop>100% 完成</div>
                 </div>
 
                 <div class="field-error" data-error></div>
 
+                <div class="check-section">
+                  <h4>車輛歷史</h4>
+                  <div class="form-grid">
+                    <div class="field">
+                      <span class="group-label">目前第幾手</span>
+                      <div class="choice-grid" role="radiogroup" aria-label="目前第幾手">
+                        <label class="choice-card"><input type="radio" name="sellerOrder" value="一手車" required />一手車</label>
+                        <label class="choice-card"><input type="radio" name="sellerOrder" value="二手車" />二手車</label>
+                        <label class="choice-card"><input type="radio" name="sellerOrder" value="三手車" />三手車</label>
+                        <label class="choice-card"><input type="radio" name="sellerOrder" value="四手以上" />四手以上</label>
+                        <label class="choice-card"><input type="radio" name="sellerOrder" value="不確定" />不確定</label>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <span class="group-label">你任內是否倒車／摔車</span>
+                      <div class="choice-grid" role="radiogroup" aria-label="你任內是否倒車或摔車">
+                        <label class="choice-card"><input type="radio" name="currentOwnerDrop" value="任內無倒車或摔車" required />任內無倒車或摔車</label>
+                        <label class="choice-card"><input type="radio" name="currentOwnerDrop" value="任內曾原地倒車" />任內曾原地倒車</label>
+                        <label class="choice-card"><input type="radio" name="currentOwnerDrop" value="任內曾低速倒摔" />任內曾低速倒摔</label>
+                        <label class="choice-card"><input type="radio" name="currentOwnerDrop" value="任內曾高速摔車" />任內曾高速摔車</label>
+                        <label class="choice-card"><input type="radio" name="currentOwnerDrop" value="不確定或不便判斷" />不確定或不便判斷</label>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <span class="group-label">已知歷史內是否倒車／摔車</span>
+                      <div class="choice-grid" role="radiogroup" aria-label="已知歷史內是否倒車或摔車">
+                        <label class="choice-card"><input type="radio" name="knownHistoryDrop" value="無已知倒車或摔車紀錄" required />無已知倒車或摔車紀錄</label>
+                        <label class="choice-card"><input type="radio" name="knownHistoryDrop" value="前手曾原地倒車" />前手曾原地倒車</label>
+                        <label class="choice-card"><input type="radio" name="knownHistoryDrop" value="前手曾低速倒摔" />前手曾低速倒摔</label>
+                        <label class="choice-card"><input type="radio" name="knownHistoryDrop" value="前手曾高速摔車" />前手曾高速摔車</label>
+                        <label class="choice-card"><input type="radio" name="knownHistoryDrop" value="歷史不明" />歷史不明</label>
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <span class="group-label">事故／修復程度</span>
+                      <div class="choice-grid" role="radiogroup" aria-label="事故或修復程度">
+                        <label class="choice-card"><input type="radio" name="accidentLevel" value="無事故紀錄" required />無事故紀錄</label>
+                        <label class="choice-card"><input type="radio" name="accidentLevel" value="輕微外觀傷或外殼更換" />輕微外觀傷或外殼更換</label>
+                        <label class="choice-card"><input type="radio" name="accidentLevel" value="把手／拉桿／踏桿等周邊修復" />把手／拉桿／踏桿等周邊修復</label>
+                        <label class="choice-card"><input type="radio" name="accidentLevel" value="前叉／三角台／輪框曾受損或更換" />前叉／三角台／輪框曾受損或更換</label>
+                        <label class="choice-card"><input type="radio" name="accidentLevel" value="車架或引擎吊點疑慮" />車架或引擎吊點疑慮</label>
+                        <label class="choice-card"><input type="radio" name="accidentLevel" value="泡水／火燒疑慮" />泡水／火燒疑慮</label>
+                        <label class="choice-card"><input type="radio" name="accidentLevel" value="不確定" />不確定</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="risk-maintenance">
                   <div class="check-section">
                     <h4>事故與風險</h4>
                     <div class="choice-grid">
-                      <label class="choice-card"><input type="checkbox" name="risk" value="原地倒車" />原地倒車</label>
-                      <label class="choice-card"><input type="checkbox" name="risk" value="低速摔車" />低速摔車</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="原地倒車（外觀件傷）" />原地倒車（外觀件傷）</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="低速倒摔（把手／拉桿／踏桿傷）" />低速倒摔（把手／拉桿／踏桿傷）</label>
                       <label class="choice-card"><input type="checkbox" name="risk" value="高速摔車" />高速摔車</label>
                       <label class="choice-card"><input type="checkbox" name="risk" value="車架受損" />車架受損</label>
                       <label class="choice-card"><input type="checkbox" name="risk" value="前叉或三角台受損" />前叉或三角台受損</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="輪框變形或更換" />輪框變形或更換</label>
                       <label class="choice-card"><input type="checkbox" name="risk" value="龍頭不正" />龍頭不正</label>
+                      <label class="choice-card"><input type="checkbox" name="risk" value="引擎外蓋／水箱／油冷排受損" />引擎外蓋／水箱／油冷排受損</label>
                       <label class="choice-card"><input type="checkbox" name="risk" value="泡水疑慮" />泡水疑慮</label>
                       <label class="choice-card"><input type="checkbox" name="risk" value="調表疑慮" />調表疑慮</label>
                       <label class="choice-card"><input type="checkbox" name="risk" value="法規或驗車風險" />法規或驗車風險</label>
@@ -1716,6 +1801,9 @@
     const state = {
       basic: {},
       conditions: {},
+      tireYears: {},
+      conditionDescription: "",
+      vehicleHistory: {},
       risk: [],
       maintenance: [],
       modifications: [],
@@ -1725,9 +1813,12 @@
     const conditionGroups = [
       { name: "appearance", label: "外觀狀況", options: ["良好", "普通", "有明顯傷痕"] },
       { name: "engine", label: "引擎狀況", options: ["正常", "有異音", "有待修"] },
-      { name: "suspension", label: "前叉／避震", options: ["正常", "輕微滲油", "需要整理"] },
+      { name: "forkRust", label: "前叉鏽蝕", options: ["無明顯鏽蝕", "內管輕微鏽點", "鏽蝕明顯需整理", "不確定"] },
+      { name: "forkLeak", label: "前叉漏油", options: ["無漏油", "有漏油／滲油需整理", "不確定"] },
+      { name: "rearShock", label: "後避震狀況", options: ["正常", "偏軟或阻尼衰退", "漏油／需整理", "不確定"] },
       { name: "brake", label: "煞車系統", options: ["正常", "耗材需更換", "需要維修"] },
-      { name: "tire", label: "輪胎狀況", options: ["近期更換", "尚可", "需要更換"] },
+      { name: "abs", label: "ABS 狀態", options: ["原廠配備且正常", "原廠配備但異常", "原廠配備但已移除", "無 ABS 車款", "不確定"] },
+      { name: "tire", label: "輪胎狀況", options: ["胎紋 7 成以上", "胎紋 4–6 成", "胎紋 3 成以下／需更換", "老化龜裂／變形", "不確定"] },
       { name: "chain", label: "鏈條齒盤", options: ["良好", "普通", "需要更換"] },
       { name: "electric", label: "電系", options: ["正常", "偶發異常", "需要檢修"] },
       { name: "repair", label: "是否有待修項目", options: ["無", "有，但不嚴重", "有明顯待修"] }
@@ -1763,6 +1854,8 @@
     const workflow = document.querySelector("[data-workflow]");
     const form = document.querySelector("#valuationForm");
     const yearSelect = document.querySelector("#year");
+    const frontTireYearSelect = document.querySelector("#frontTireYear");
+    const rearTireYearSelect = document.querySelector("#rearTireYear");
     const conditionGrid = document.querySelector("#conditionGrid");
     const modGrid = document.querySelector("#modGrid");
     const summaryGrid = document.querySelector("#summaryGrid");
@@ -1775,6 +1868,19 @@
         option.textContent = year;
         yearSelect.appendChild(option);
       }
+    }
+
+    function buildTireYearOptions() {
+      [frontTireYearSelect, rearTireYearSelect].forEach((select) => {
+        if (!select) return;
+
+        for (let year = 2026; year >= 2000; year -= 1) {
+          const option = document.createElement("option");
+          option.value = year;
+          option.textContent = year;
+          select.appendChild(option);
+        }
+      });
     }
 
     function getTagClass(tag) {
@@ -1877,17 +1983,26 @@
       }
 
       if (section === "conditions") {
-        const completedItems = conditionGroups.filter((group) => getRadioValue(group.name)).length;
-        return Math.round((completedItems / conditionGroups.length) * 100);
+        const completedItems = [
+          ...conditionGroups.map((group) => getRadioValue(group.name)),
+          form.frontTireYear.value,
+          form.rearTireYear.value
+        ].filter(Boolean).length;
+
+        return Math.round((completedItems / (conditionGroups.length + 2)) * 100);
       }
 
       if (section === "records") {
         const completedItems = [
+          getRadioValue("sellerOrder"),
+          getRadioValue("currentOwnerDrop"),
+          getRadioValue("knownHistoryDrop"),
+          getRadioValue("accidentLevel"),
           getCheckedValues("risk").length > 0,
           getCheckedValues("maintenance").length > 0
         ].filter(Boolean).length;
 
-        return Math.round((completedItems / 2) * 100);
+        return Math.round((completedItems / 6) * 100);
       }
 
       if (section === "modifications") {
@@ -1971,20 +2086,40 @@
           return false;
         }
 
+        const frontTireYear = form.frontTireYear.value;
+        const rearTireYear = form.rearTireYear.value;
+        if (!frontTireYear || !rearTireYear) {
+          showError("請選擇前輪與後輪製造年份；若不知道，請選「不確定」。");
+          return false;
+        }
+
         state.conditions = conditionGroups.reduce((acc, group) => {
           acc[group.label] = getRadioValue(group.name);
           return acc;
         }, {});
+        state.tireYears = { front: frontTireYear, rear: rearTireYear };
+        state.conditionDescription = form.conditionDescription.value.trim();
       }
 
       if (currentStep === 2) {
+        const sellerOrder = getRadioValue("sellerOrder");
+        const currentOwnerDrop = getRadioValue("currentOwnerDrop");
+        const knownHistoryDrop = getRadioValue("knownHistoryDrop");
+        const accidentLevel = getRadioValue("accidentLevel");
         const risk = getCheckedValues("risk");
         const maintenance = getCheckedValues("maintenance");
+
+        if (!sellerOrder || !currentOwnerDrop || !knownHistoryDrop || !accidentLevel) {
+          showError("請完成車輛歷史、任內倒摔、已知歷史與事故／修復程度。");
+          return false;
+        }
+
         if (risk.length === 0 || maintenance.length === 0) {
           showError("請至少各選擇一項事故與風險、保養紀錄。若無事故風險，請選「以上皆無」。");
           return false;
         }
 
+        state.vehicleHistory = { sellerOrder, currentOwnerDrop, knownHistoryDrop, accidentLevel };
         state.risk = risk;
         state.maintenance = maintenance;
       }
@@ -2005,6 +2140,15 @@
         : state.modifications.length > 0
           ? state.modifications.join("、")
           : "未勾選";
+      const history = state.vehicleHistory && state.vehicleHistory.sellerOrder
+        ? [
+            state.vehicleHistory.sellerOrder,
+            state.vehicleHistory.currentOwnerDrop,
+            state.vehicleHistory.knownHistoryDrop,
+            state.vehicleHistory.accidentLevel
+          ].filter(Boolean).join("／")
+        : "未填";
+      const conditionDescription = state.conditionDescription || "未填寫";
       const summary = [
         ["品牌／車型", `${basic.brand || "未填"} ${basic.model || ""}`.trim()],
         ["年份", basic.year || "未填"],
@@ -2012,8 +2156,11 @@
         ["里程", basic.mileage ? `${Number(basic.mileage).toLocaleString("zh-TW")} km` : "未填"],
         ["牌照類型", basic.plate || "未填"],
         ["主要用途", basic.usage ? basic.usage.join("、") : "未填"],
+        ["輪胎年份", state.tireYears.front ? `前輪 ${state.tireYears.front}／後輪 ${state.tireYears.rear}` : "未填"],
+        ["車輛歷史", history],
         ["事故與風險", state.risk.length ? state.risk.join("、") : "未填"],
         ["保養紀錄", state.maintenance.length ? state.maintenance.join("、") : "未填"],
+        ["車況補充描述", conditionDescription],
         ["改裝品", mods]
       ];
 
@@ -2046,6 +2193,9 @@
       form.reset();
       state.basic = {};
       state.conditions = {};
+      state.tireYears = {};
+      state.conditionDescription = "";
+      state.vehicleHistory = {};
       state.risk = [];
       state.maintenance = [];
       state.modifications = [];
@@ -2113,6 +2263,7 @@
     });
 
     buildYearOptions();
+    buildTireYearOptions();
     buildConditionCards();
     buildModificationCards();
     updateCompletionMeters();
