@@ -676,6 +676,7 @@
 
     input[type="text"],
     input[type="number"],
+    input[type="file"],
     select,
     textarea {
       width: 100%;
@@ -756,12 +757,58 @@
     }
 
     .shell-details {
-      border-color: var(--orange-line);
+      display: grid;
+      gap: 12px;
+      border: 1px solid var(--orange-line);
+      border-radius: var(--radius);
+      padding: 14px;
       background: var(--orange-soft);
     }
 
     .shell-details h4 {
+      margin: 0;
       color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .photo-upload-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .photo-upload-card {
+      display: grid;
+      gap: 8px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--surface-soft);
+    }
+
+    .photo-upload-card label {
+      color: var(--primary);
+      font-weight: 900;
+    }
+
+    .photo-count {
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .photo-count.is-over-limit,
+    .photo-error {
+      color: var(--danger);
+    }
+
+    .photo-error {
+      display: none;
+      font-size: 0.88rem;
+      font-weight: 900;
+    }
+
+    .photo-error.active {
+      display: block;
     }
 
     .risk-maintenance {
@@ -1282,6 +1329,10 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
+      .photo-upload-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .summary-grid .summary-item {
         border-bottom: 0;
         border-radius: var(--radius);
@@ -1609,33 +1660,41 @@
 
                 <div class="field-error" data-error></div>
 
-                <div class="condition-grid" id="conditionGrid"></div>
-
-                <div class="check-section shell-details is-hidden" data-shell-details>
-                  <h4>副廠殼補充資料</h4>
-                  <div class="form-grid">
-                    <div class="field">
-                      <span class="group-label">原廠殼是否還在</span>
-                      <div class="choice-grid" role="radiogroup" aria-label="原廠殼是否還在">
-                        <label class="choice-card"><input type="radio" name="originalShellAvailability" value="原廠殼完整保留" />原廠殼完整保留</label>
-                        <label class="choice-card"><input type="radio" name="originalShellAvailability" value="原廠殼部分保留" />原廠殼部分保留</label>
-                        <label class="choice-card"><input type="radio" name="originalShellAvailability" value="原廠殼已遺失" />原廠殼已遺失</label>
-                        <label class="choice-card"><input type="radio" name="originalShellAvailability" value="不確定" />不確定</label>
-                      </div>
-                    </div>
-
-                    <div class="field">
-                      <span class="group-label">原廠殼保存狀況</span>
-                      <div class="choice-grid" role="radiogroup" aria-label="原廠殼保存狀況">
-                        <label class="choice-card"><input type="radio" name="originalShellCondition" value="保存良好可直接裝回" />保存良好可直接裝回</label>
-                        <label class="choice-card"><input type="radio" name="originalShellCondition" value="有刮傷或小裂損" />有刮傷或小裂損</label>
-                        <label class="choice-card"><input type="radio" name="originalShellCondition" value="需整理或缺件" />需整理或缺件</label>
-                        <label class="choice-card"><input type="radio" name="originalShellCondition" value="不確定" />不確定</label>
-                      </div>
-                    </div>
+                <div class="condition-group" data-shell-group>
+                  <span class="group-label">車殼資料</span>
+                  <div class="condition-options" role="radiogroup" aria-label="車殼資料">
+                    <label class="choice-card"><input type="radio" name="shellType" value="原廠殼" required />原廠殼</label>
+                    <label class="choice-card"><input type="radio" name="shellType" value="副廠殼" />副廠殼</label>
                   </div>
-                  <span class="field-hint">副廠殼不一定扣分，但原廠殼是否保留與保存狀況會影響買方接受度。</span>
+
+                  <div class="shell-details is-hidden" data-shell-details>
+                    <h4>副廠殼補充資料</h4>
+                    <div class="form-grid">
+                      <div class="field">
+                        <span class="group-label">原廠殼是否還在</span>
+                        <div class="choice-grid" role="radiogroup" aria-label="原廠殼是否還在">
+                          <label class="choice-card"><input type="radio" name="originalShellAvailability" value="原廠殼完整保留" />原廠殼完整保留</label>
+                          <label class="choice-card"><input type="radio" name="originalShellAvailability" value="原廠殼部分保留" />原廠殼部分保留</label>
+                          <label class="choice-card"><input type="radio" name="originalShellAvailability" value="原廠殼已遺失" />原廠殼已遺失</label>
+                          <label class="choice-card"><input type="radio" name="originalShellAvailability" value="不確定" />不確定</label>
+                        </div>
+                      </div>
+
+                      <div class="field">
+                        <span class="group-label">原廠殼保存狀況</span>
+                        <div class="choice-grid" role="radiogroup" aria-label="原廠殼保存狀況">
+                          <label class="choice-card"><input type="radio" name="originalShellCondition" value="保存良好可直接裝回" />保存良好可直接裝回</label>
+                          <label class="choice-card"><input type="radio" name="originalShellCondition" value="有刮傷或小裂損" />有刮傷或小裂損</label>
+                          <label class="choice-card"><input type="radio" name="originalShellCondition" value="需整理或缺件" />需整理或缺件</label>
+                          <label class="choice-card"><input type="radio" name="originalShellCondition" value="不確定" />不確定</label>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="field-hint">副廠殼不一定扣分，但原廠殼是否保留與保存狀況會影響買方接受度。</span>
+                  </div>
                 </div>
+
+                <div class="condition-grid" id="conditionGrid"></div>
 
                 <div class="form-grid">
                   <div class="field">
@@ -1659,6 +1718,39 @@
                     <textarea id="conditionDescription" name="conditionDescription" placeholder="可補充異音、漏油位置、待修項目、耗材狀態、原廠品是否保留、照片中看不到的細節等。"></textarea>
                     <span class="field-hint">可自由輸入，Demo 不會儲存或送出這段文字。</span>
                   </div>
+                </div>
+
+                <div class="check-section photo-upload-section" data-photo-section>
+                  <h4>車況照片</h4>
+                  <span class="field-hint">可選擇照片作為 Demo 流程示意，照片只存在瀏覽器記憶體中，不會上傳或儲存。全部欄位合計最多 10 張。</span>
+                  <div class="photo-upload-grid">
+                    <div class="photo-upload-card">
+                      <label for="photoFront">正面全體</label>
+                      <input id="photoFront" name="photoFront" type="file" accept="image/*" data-photo-input />
+                    </div>
+                    <div class="photo-upload-card">
+                      <label for="photoRear">車尾全體</label>
+                      <input id="photoRear" name="photoRear" type="file" accept="image/*" data-photo-input />
+                    </div>
+                    <div class="photo-upload-card">
+                      <label for="photoLeft">左側全體</label>
+                      <input id="photoLeft" name="photoLeft" type="file" accept="image/*" data-photo-input />
+                    </div>
+                    <div class="photo-upload-card">
+                      <label for="photoRight">右側全體</label>
+                      <input id="photoRight" name="photoRight" type="file" accept="image/*" data-photo-input />
+                    </div>
+                    <div class="photo-upload-card">
+                      <label for="photoMileage">儀表清楚里程畫面</label>
+                      <input id="photoMileage" name="photoMileage" type="file" accept="image/*" data-photo-input />
+                    </div>
+                    <div class="photo-upload-card">
+                      <label for="photoMore">更多</label>
+                      <input id="photoMore" name="photoMore" type="file" accept="image/*" multiple data-photo-input />
+                    </div>
+                  </div>
+                  <div class="photo-count" data-photo-count>已選 0 / 10 張</div>
+                  <div class="photo-error" data-photo-error>照片最多 10 張，請減少選取數量。</div>
                 </div>
 
                 <div class="step-actions">
@@ -1973,6 +2065,7 @@
       tireYears: {},
       shellDetails: {},
       conditionDescription: "",
+      photos: { total: 0 },
       vehicleHistory: {},
       risk: [],
       maintenance: [],
@@ -1983,7 +2076,6 @@
     const conditionGroups = [
       { name: "appearance", label: "外觀狀況", options: ["良好", "普通", "有明顯傷痕"] },
       { name: "engine", label: "引擎狀況", options: ["正常", "有異音", "有待修"] },
-      { name: "shellType", label: "車殼資料", options: ["原廠殼", "副廠殼"] },
       { name: "forkRust", label: "前叉鏽蝕", options: ["無明顯鏽蝕", "內管輕微鏽點", "鏽蝕明顯需整理", "不確定"] },
       { name: "forkLeak", label: "前叉漏油", options: ["無漏油", "有漏油／滲油需整理", "不確定"] },
       { name: "rearShock", label: "後避震狀況", options: ["正常", "偏軟或阻尼衰退", "漏油／需整理", "不確定"] },
@@ -2028,6 +2120,10 @@
     const frontTireYearSelect = document.querySelector("#frontTireYear");
     const rearTireYearSelect = document.querySelector("#rearTireYear");
     const shellDetails = document.querySelector("[data-shell-details]");
+    const photoInputs = Array.from(document.querySelectorAll("[data-photo-input]"));
+    const photoSection = document.querySelector("[data-photo-section]");
+    const photoCount = document.querySelector("[data-photo-count]");
+    const photoError = document.querySelector("[data-photo-error]");
     const conditionGrid = document.querySelector("#conditionGrid");
     const modGrid = document.querySelector("#modGrid");
     const summaryGrid = document.querySelector("#summaryGrid");
@@ -2169,6 +2265,25 @@
       }
     }
 
+    function getPhotoTotal() {
+      return photoInputs.reduce((total, input) => total + input.files.length, 0);
+    }
+
+    function updatePhotoStatus() {
+      const total = getPhotoTotal();
+      const overLimit = total > 10;
+      state.photos = { total };
+
+      if (photoCount) {
+        photoCount.textContent = `已選 ${total} / 10 張`;
+        photoCount.classList.toggle("is-over-limit", overLimit);
+      }
+
+      if (photoError) photoError.classList.toggle("active", overLimit);
+      if (photoSection) photoSection.classList.toggle("is-invalid", overLimit);
+      return !overLimit;
+    }
+
     function getCompletionPercent(section) {
       if (section === "basic") {
         const completedItems = [
@@ -2187,12 +2302,13 @@
       if (section === "conditions") {
         const isAftermarketShell = getRadioValue("shellType") === "副廠殼";
         const completedItems = [
+          getRadioValue("shellType"),
           ...conditionGroups.map((group) => getRadioValue(group.name)),
           form.frontTireYear.value,
           form.rearTireYear.value,
           ...(isAftermarketShell ? [getRadioValue("originalShellAvailability"), getRadioValue("originalShellCondition")] : [])
         ].filter(Boolean).length;
-        const requiredItems = conditionGroups.length + 2 + (isAftermarketShell ? 2 : 0);
+        const requiredItems = conditionGroups.length + 3 + (isAftermarketShell ? 2 : 0);
 
         return Math.round((completedItems / requiredItems) * 100);
       }
@@ -2377,18 +2493,25 @@
         const missingConditionGroups = conditionGroups.filter((group) => !getRadioValue(group.name));
         missingConditionGroups.forEach((group) => markInvalidByName(group.name));
 
+        const shellType = getRadioValue("shellType");
         const frontTireYear = form.frontTireYear.value;
         const rearTireYear = form.rearTireYear.value;
-        const isAftermarketShell = getRadioValue("shellType") === "副廠殼";
+        const isAftermarketShell = shellType === "副廠殼";
         const originalShellAvailability = getRadioValue("originalShellAvailability");
         const originalShellCondition = getRadioValue("originalShellCondition");
+        if (!shellType) markInvalidByName("shellType");
         if (!frontTireYear) markInvalidById("frontTireYear");
         if (!rearTireYear) markInvalidById("rearTireYear");
         if (isAftermarketShell && !originalShellAvailability) markInvalidByName("originalShellAvailability");
         if (isAftermarketShell && !originalShellCondition) markInvalidByName("originalShellCondition");
 
-        if (missingConditionGroups.length > 0 || !frontTireYear || !rearTireYear || (isAftermarketShell && (!originalShellAvailability || !originalShellCondition))) {
+        if (missingConditionGroups.length > 0 || !shellType || !frontTireYear || !rearTireYear || (isAftermarketShell && (!originalShellAvailability || !originalShellCondition))) {
           showError("請完成所有車況選項、前後輪製造年份；若選副廠殼，也請補充原廠殼是否還在與保存狀況。");
+          return false;
+        }
+
+        if (!updatePhotoStatus()) {
+          showError("照片最多 10 張，請減少選取數量後再繼續。");
           return false;
         }
 
@@ -2396,6 +2519,7 @@
           acc[group.label] = getRadioValue(group.name);
           return acc;
         }, {});
+        state.conditions["車殼資料"] = shellType;
         state.tireYears = { front: frontTireYear, rear: rearTireYear };
         state.shellDetails = isAftermarketShell
           ? { availability: originalShellAvailability, condition: originalShellCondition }
@@ -2460,6 +2584,7 @@
       const shellSummary = shellType === "副廠殼"
         ? `副廠殼／${state.shellDetails.availability || "原廠殼狀態未填"}／${state.shellDetails.condition || "保存狀況未填"}`
         : shellType || "未填";
+      const photoSummary = state.photos.total > 0 ? `已選 ${state.photos.total} 張（Demo 不會上傳）` : "未選擇";
       const summary = [
         ["品牌／車型", `${basic.brand || "未填"} ${basic.model || ""}`.trim()],
         ["年份", basic.year || "未填"],
@@ -2469,6 +2594,7 @@
         ["主要用途", basic.usage ? basic.usage.join("、") : "未填"],
         ["車殼資料", shellSummary],
         ["輪胎年份", state.tireYears.front ? `前輪 ${state.tireYears.front}／後輪 ${state.tireYears.rear}` : "未填"],
+        ["車況照片", photoSummary],
         ["車輛歷史", history],
         ["事故與風險", state.risk.length ? state.risk.join("、") : "未填"],
         ["保養紀錄", state.maintenance.length ? state.maintenance.join("、") : "未填"],
@@ -2531,6 +2657,7 @@
       state.tireYears = {};
       state.shellDetails = {};
       state.conditionDescription = "";
+      state.photos = { total: 0 };
       state.vehicleHistory = {};
       state.risk = [];
       state.maintenance = [];
@@ -2539,6 +2666,7 @@
       summaryGrid.innerHTML = "";
       currentStep = 0;
       updateStep();
+      updatePhotoStatus();
       updateCompletionMeters();
       landing.classList.remove("is-hidden");
       workflow.classList.remove("active");
@@ -2599,6 +2727,7 @@
     form.addEventListener("change", (event) => {
       handleExclusiveCheckbox(event);
       if (event.target && event.target.name === "shellType") toggleShellDetails();
+      if (event.target && event.target.matches("[data-photo-input]")) updatePhotoStatus();
       clearResolvedInvalid(event.target);
       updateCompletionMeters();
     });
@@ -2608,6 +2737,7 @@
     buildConditionCards();
     buildModificationCards();
     toggleShellDetails();
+    updatePhotoStatus();
     updateCompletionMeters();
 
   </script>
