@@ -551,6 +551,107 @@
       font-weight: 600;
     }
 
+    .completion-card {
+      position: relative;
+      display: grid;
+      gap: 10px;
+      overflow: visible;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: linear-gradient(180deg, var(--surface), var(--background));
+    }
+
+    .completion-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--primary);
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    .completion-top strong {
+      color: var(--secondary);
+      font-size: 1rem;
+      font-weight: 950;
+    }
+
+    .completion-track {
+      overflow: hidden;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--gray-200);
+    }
+
+    .completion-track span {
+      display: block;
+      width: var(--completion, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.28s ease;
+    }
+
+    .completion-card.completed {
+      border-color: var(--teal-line);
+      background: var(--teal-soft);
+    }
+
+    .completion-card.completed .completion-track span {
+      background: linear-gradient(90deg, var(--secondary), var(--success));
+    }
+
+    .completion-hint {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .completion-pop {
+      position: absolute;
+      top: -14px;
+      right: 14px;
+      z-index: 2;
+      border-radius: 999px;
+      padding: 6px 11px;
+      background: var(--secondary);
+      color: var(--white);
+      font-size: 0.8rem;
+      font-weight: 950;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6px) scale(0.96);
+      box-shadow: 0 12px 26px rgba(15, 118, 110, 0.22);
+    }
+
+    .completion-pop.celebrate {
+      animation: completion-pop 1s ease both;
+    }
+
+    @keyframes completion-pop {
+      0% {
+        opacity: 0;
+        transform: translateY(8px) scale(0.95);
+      }
+
+      18% {
+        opacity: 1;
+        transform: translateY(0) scale(1.04);
+      }
+
+      68% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+      }
+    }
+
     .form-grid {
       display: grid;
       gap: 16px;
@@ -684,6 +785,15 @@
       border-color: var(--secondary);
       background: var(--teal-soft);
       box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.11);
+    }
+
+    .mod-confirm {
+      display: grid;
+      gap: 8px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--surface-soft);
     }
 
     .mod-main {
@@ -1025,6 +1135,7 @@
 
       .field.full,
       .section-heading,
+      .completion-card,
       .field-error,
       .check-section,
       .result-intro,
@@ -1245,6 +1356,18 @@
                   <p>此處僅為流程體驗，請勿填寫車牌、行照、姓名或電話等個資。</p>
                 </div>
 
+                <div class="completion-card" data-completion="basic">
+                  <div class="completion-top">
+                    <span>基本資料完整度</span>
+                    <strong data-completion-percent>0%</strong>
+                  </div>
+                  <div class="completion-track" role="progressbar" aria-label="基本資料完整度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span data-completion-bar></span>
+                  </div>
+                  <div class="completion-hint">品牌、車型、年份、里程、級距、牌照與用途都完成後，本區會達到 100%。</div>
+                  <div class="completion-pop" data-completion-pop>100% 完成</div>
+                </div>
+
                 <div class="field-error" data-error></div>
 
                 <div class="form-grid">
@@ -1336,6 +1459,18 @@
                   <p>請選擇最接近的狀態。正式版未來會搭配更細的檢查項目。</p>
                 </div>
 
+                <div class="completion-card" data-completion="conditions">
+                  <div class="completion-top">
+                    <span>車況資料完整度</span>
+                    <strong data-completion-percent>0%</strong>
+                  </div>
+                  <div class="completion-track" role="progressbar" aria-label="車況資料完整度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span data-completion-bar></span>
+                  </div>
+                  <div class="completion-hint">外觀、引擎、底盤、煞車、輪胎、鏈條、電系與待修項目都選完後即完成。</div>
+                  <div class="completion-pop" data-completion-pop>100% 完成</div>
+                </div>
+
                 <div class="field-error" data-error></div>
 
                 <div class="condition-grid" id="conditionGrid"></div>
@@ -1357,6 +1492,18 @@
                 <div class="section-heading">
                   <h3>Step 3：事故與保養紀錄</h3>
                   <p>此 Demo 不會判定真實事故車況，選項只用於體驗資料整理流程。</p>
+                </div>
+
+                <div class="completion-card" data-completion="records">
+                  <div class="completion-top">
+                    <span>事故與保養完整度</span>
+                    <strong data-completion-percent>0%</strong>
+                  </div>
+                  <div class="completion-track" role="progressbar" aria-label="事故與保養完整度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span data-completion-bar></span>
+                  </div>
+                  <div class="completion-hint">事故與風險、保養紀錄兩個區塊都至少選一項後即完成。</div>
+                  <div class="completion-pop" data-completion-pop>100% 完成</div>
                 </div>
 
                 <div class="field-error" data-error></div>
@@ -1413,7 +1560,27 @@
                   <p>請勾選車上主要改裝項目。此頁可不選，直接前往 Demo 結果。</p>
                 </div>
 
+                <div class="completion-card" data-completion="modifications">
+                  <div class="completion-top">
+                    <span>改裝品確認完整度</span>
+                    <strong data-completion-percent>0%</strong>
+                  </div>
+                  <div class="completion-track" role="progressbar" aria-label="改裝品確認完整度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <span data-completion-bar></span>
+                  </div>
+                  <div class="completion-hint">勾選改裝品，或明確確認無上述改裝品後，本區會達到 100%。</div>
+                  <div class="completion-pop" data-completion-pop>100% 完成</div>
+                </div>
+
                 <div class="mod-grid" id="modGrid"></div>
+
+                <div class="mod-confirm">
+                  <label class="choice-card">
+                    <input type="checkbox" name="noModifications" value="無上述改裝品／維持原廠設定" />
+                    無上述改裝品／維持原廠設定
+                  </label>
+                  <span class="field-hint">若車輛維持原廠狀態，可勾選此項完成改裝品確認。</span>
+                </div>
 
                 <div class="notice">
                   <strong>改裝品估算提醒</strong>
@@ -1551,7 +1718,8 @@
       conditions: {},
       risk: [],
       maintenance: [],
-      modifications: []
+      modifications: [],
+      noModifications: false
     };
 
     const conditionGroups = [
@@ -1590,6 +1758,7 @@
 
     const panels = Array.from(document.querySelectorAll("[data-panel]"));
     const progressSteps = Array.from(document.querySelectorAll(".progress-step"));
+    const completionCards = Array.from(document.querySelectorAll("[data-completion]"));
     const landing = document.querySelector("[data-landing]");
     const workflow = document.querySelector("[data-workflow]");
     const form = document.querySelector("#valuationForm");
@@ -1597,6 +1766,7 @@
     const conditionGrid = document.querySelector("#conditionGrid");
     const modGrid = document.querySelector("#modGrid");
     const summaryGrid = document.querySelector("#summaryGrid");
+    const completionCelebrated = {};
 
     function buildYearOptions() {
       for (let year = 2026; year >= 2000; year -= 1) {
@@ -1691,6 +1861,77 @@
       return checked ? checked.value : "";
     }
 
+    function getCompletionPercent(section) {
+      if (section === "basic") {
+        const completedItems = [
+          form.brand.value.trim(),
+          form.model.value.trim(),
+          form.year.value,
+          form.mileage.value !== "" && Number(form.mileage.value) >= 0,
+          getRadioValue("displacement"),
+          getRadioValue("plate"),
+          getCheckedValues("usage").length > 0
+        ].filter(Boolean).length;
+
+        return Math.round((completedItems / 7) * 100);
+      }
+
+      if (section === "conditions") {
+        const completedItems = conditionGroups.filter((group) => getRadioValue(group.name)).length;
+        return Math.round((completedItems / conditionGroups.length) * 100);
+      }
+
+      if (section === "records") {
+        const completedItems = [
+          getCheckedValues("risk").length > 0,
+          getCheckedValues("maintenance").length > 0
+        ].filter(Boolean).length;
+
+        return Math.round((completedItems / 2) * 100);
+      }
+
+      if (section === "modifications") {
+        const hasModifications = getCheckedValues("modifications").length > 0;
+        const confirmedNoModifications = Boolean(form.noModifications && form.noModifications.checked);
+        return hasModifications || confirmedNoModifications ? 100 : 0;
+      }
+
+      return 0;
+    }
+
+    function showCompletionEffect(card) {
+      const pop = card.querySelector("[data-completion-pop]");
+      if (!pop) return;
+
+      pop.classList.remove("celebrate");
+      void pop.offsetWidth;
+      pop.classList.add("celebrate");
+      window.setTimeout(() => pop.classList.remove("celebrate"), 1000);
+    }
+
+    function updateCompletionMeters() {
+      completionCards.forEach((card) => {
+        const section = card.dataset.completion;
+        const percent = getCompletionPercent(section);
+        const percentLabel = card.querySelector("[data-completion-percent]");
+        const track = card.querySelector(".completion-track");
+
+        card.style.setProperty("--completion", `${percent}%`);
+        card.classList.toggle("completed", percent === 100);
+        if (percentLabel) percentLabel.textContent = `${percent}%`;
+        if (track) track.setAttribute("aria-valuenow", String(percent));
+
+        if (percent === 100 && !completionCelebrated[section]) {
+          completionCelebrated[section] = true;
+          showCompletionEffect(card);
+        }
+
+        if (percent < 100) {
+          completionCelebrated[section] = false;
+        }
+      });
+    }
+
     function showError(message) {
       const activePanel = panels[currentStep];
       const error = activePanel.querySelector("[data-error]");
@@ -1750,6 +1991,7 @@
 
       if (currentStep === 3) {
         state.modifications = getCheckedValues("modifications");
+        state.noModifications = Boolean(form.noModifications && form.noModifications.checked);
         renderSummary();
       }
 
@@ -1758,7 +2000,11 @@
 
     function renderSummary() {
       const basic = state.basic;
-      const mods = state.modifications.length > 0 ? state.modifications.join("、") : "未勾選";
+      const mods = state.noModifications
+        ? "無上述改裝品／維持原廠設定"
+        : state.modifications.length > 0
+          ? state.modifications.join("、")
+          : "未勾選";
       const summary = [
         ["品牌／車型", `${basic.brand || "未填"} ${basic.model || ""}`.trim()],
         ["年份", basic.year || "未填"],
@@ -1803,9 +2049,11 @@
       state.risk = [];
       state.maintenance = [];
       state.modifications = [];
+      state.noModifications = false;
       summaryGrid.innerHTML = "";
       currentStep = 0;
       updateStep();
+      updateCompletionMeters();
       landing.classList.remove("is-hidden");
       workflow.classList.remove("active");
       landing.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1814,6 +2062,18 @@
     function handleExclusiveCheckbox(event) {
       const input = event.target;
       if (!(input instanceof HTMLInputElement) || input.type !== "checkbox") return;
+
+      if (input.name === "noModifications" && input.checked) {
+        form.querySelectorAll('input[name="modifications"]').forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+        return;
+      }
+
+      if (input.name === "modifications" && input.checked && form.noModifications) {
+        form.noModifications.checked = false;
+      }
+
       const exclusiveGroup = input.dataset.exclusive;
       if (!exclusiveGroup) {
         const exclusive = form.querySelector(`input[data-exclusive="${input.name}"]`);
@@ -1846,11 +2106,16 @@
       button.addEventListener("click", restartDemo);
     });
 
-    form.addEventListener("change", handleExclusiveCheckbox);
+    form.addEventListener("input", updateCompletionMeters);
+    form.addEventListener("change", (event) => {
+      handleExclusiveCheckbox(event);
+      updateCompletionMeters();
+    });
 
     buildYearOptions();
     buildConditionCards();
     buildModificationCards();
+    updateCompletionMeters();
 
   </script>
 </body>
